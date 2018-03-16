@@ -1100,5 +1100,11 @@
   <string name="RegistrationActivity_too_many_attempts">יותר מדי ניסיונות</string>
   <string name="RegistrationLockDialog_disable">הַשְׁבֵּת</string>
   <string name="RegistrationActivity_continue">המשך</string>
+  <!-- verify image activity -->
+  <string name="how_confident">כמה את/ה בטוח/ה בזהות של אדם זה?</string>
+  <string name="not_sure">לא בטוח/ה</string>
+  <!-- certification -->
+  <string name="marked_safety">אישרת את הוודאות שלך עם </string>
+  <string name="not_marked_safety">טרם אישרת את הוודאות שלך בנוגע ל:  </string>
   <!--EOF-->
 </resources>
