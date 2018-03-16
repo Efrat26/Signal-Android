@@ -69,7 +69,9 @@ import dagger.ObjectGraph;
 public class ApplicationContext extends MultiDexApplication implements DependencyInjector {
 
   private static final String TAG = ApplicationContext.class.getName();
-
+  //experiment version. 0 is the original version, change it to a different int
+  // to be on the experiment mode. getter & setter are available
+  private int experimentVersion = 1;
   private ExpiringMessageManager expiringMessageManager;
   private JobManager             jobManager;
   private ObjectGraph            objectGraph;
@@ -211,5 +213,12 @@ public class ApplicationContext extends MultiDexApplication implements Dependenc
 
     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
-
+    //getter fot the experiment version
+    public int getExperimentVersion() {
+        return experimentVersion;
+        }
+    //setter fot the experiment version
+        public void setExperimentVersion(int version) {
+        this.experimentVersion = version;
+        }
 }
