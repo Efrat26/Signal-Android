@@ -89,7 +89,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
+import org.thoughtcrime.securesms.ApplicationContext;
+import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
 /**
  * A view that displays an individual conversation item within a conversation
  * thread.  Used by ComposeMessageActivity's ListActivity via a ConversationAdapter.
@@ -348,6 +349,7 @@ public class ConversationItem extends LinearLayout
     if (isCaptionlessMms(messageRecord)) {
       bodyText.setVisibility(View.GONE);
     } else {
+      //if i changed here the text then all messages appeared with the same text
       bodyText.setText(linkifyMessageBody(messageRecord.getDisplayBody(), batchSelected.isEmpty()));
       bodyText.setVisibility(View.VISIBLE);
     }
