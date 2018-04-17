@@ -1407,6 +1407,9 @@
     <!-- certification -->
     <string name="marked_safety">You have marked your safety number with </string>
     <string name="not_marked_safety">You haven\'t marked you safety number with </string>
+
+    <!-- biu settings-->
+    <string name ="preference_file_key"></string>
     <!-- EOF -->
 
 </resources>

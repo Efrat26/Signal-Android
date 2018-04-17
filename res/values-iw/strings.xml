@@ -1106,5 +1106,8 @@
   <!-- certification -->
   <string name="marked_safety">אישרת את הוודאות שלך עם </string>
   <string name="not_marked_safety">טרם אישרת את הוודאות שלך בנוגע ל:  </string>
+
+  <!-- biu settings-->
+  <string name ="preference_file_key"></string>
   <!--EOF-->
 </resources>
