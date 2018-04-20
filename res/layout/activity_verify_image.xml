@@ -6,68 +6,109 @@
     android:layout_height="match_parent"
     tools:context="org.thoughtcrime.securesms.VerifyImage">
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/yes"
-        tools:layout_editor_absoluteX="32dp"
-        tools:layout_editor_absoluteY="386dp"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/signal_primary"
-        android:textColor="@color/white"
-        android:padding="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="306dp"
+        android:gravity="top"
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/not_sure"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="386dp"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/signal_primary"
-        android:textColor="@color/white"
-        android:padding="10dp"
-        />
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no"
-        tools:layout_editor_absoluteX="270dp"
-        tools:layout_editor_absoluteY="386dp"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/signal_primary"
-        android:textColor="@color/white"
-        android:padding="10dp"/>
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_contact_picture"
-        tools:layout_editor_absoluteX="137dp"
-        tools:layout_editor_absoluteY="211dp"
-    />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="20dp"
+            android:gravity="top"
+            android:lineSpacingMultiplier="1.3"
+            android:paddingBottom="80dp"
+            android:text="@string/how_confident"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="45dp" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:textSize="15sp"
-        android:lineSpacingMultiplier="1.3"
-        android:gravity="center"
-        android:text="@string/how_confident"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="36dip"
+            android:layout_height="36dip"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="false"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_contact_picture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="127dp"
+        android:layout_margin="@dimen/separator_padding"
+        android:gravity="bottom"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="45dp" />
+        tools:layout_editor_absoluteY="323dp">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@color/signal_primary"
+            android:padding="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="200dp"
+            android:text="@string/yes"
+            android:textColor="@color/white"
+            tools:layout_editor_absoluteX="32dp"
+            tools:layout_editor_absoluteY="386dp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"></Space>
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@color/signal_primary"
+            android:padding="10dp"
+            android:paddingLeft="200dp"
+            android:paddingRight="200dp"
+            android:text="@string/not_sure"
+            android:textColor="@color/white"
+            tools:layout_editor_absoluteX="148dp"
+            tools:layout_editor_absoluteY="386dp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"></Space>
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@color/signal_primary"
+            android:padding="10dp"
+            android:paddingLeft="200dp"
+            android:paddingRight="15dp"
+            android:text="@string/no"
+            android:textColor="@color/white"
+            tools:layout_editor_absoluteX="270dp"
+            tools:layout_editor_absoluteY="386dp" />
+    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>

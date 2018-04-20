@@ -264,7 +264,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
     Intent myIntent = new Intent(this,VerifyImage.class);
     startActivity(myIntent);
-    setContentView(R.layout.activity_verify_image);
+    //setContentView(R.layout.activity_verify_image);
     setContentView(R.layout.conversation_activity);
 
     TypedArray typedArray = obtainStyledAttributes(new int[] {R.attr.conversation_background});
