@@ -8,9 +8,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="306dp"
-        android:gravity="top"
+        android:layout_height="match_parent"
 
+        android:gravity="top"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
@@ -33,8 +33,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="36dip"
-            android:layout_height="36dip"
+            android:layout_width="200dip"
+            android:layout_height="200dip"
             android:layout_gravity="center_horizontal"
             android:adjustViewBounds="false"
             android:scaleType="fitXY"
@@ -42,73 +42,80 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_weight="1"></Space>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/separator_padding"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:layout_editor_absoluteY="323dp">
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@color/signal_primary"
+                android:padding="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="200dp"
+                android:text="@string/yes"
+                android:textColor="@color/white"
+                tools:layout_editor_absoluteX="32dp"
+                tools:layout_editor_absoluteY="386dp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"></Space>
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@color/signal_primary"
+                android:padding="10dp"
+                android:paddingLeft="200dp"
+                android:paddingRight="200dp"
+                android:text="@string/not_sure"
+                android:textColor="@color/white"
+                tools:layout_editor_absoluteX="148dp"
+                tools:layout_editor_absoluteY="386dp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"></Space>
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@color/signal_primary"
+                android:padding="10dp"
+                android:paddingLeft="200dp"
+                android:paddingRight="15dp"
+                android:text="@string/no"
+                android:textColor="@color/white"
+                tools:layout_editor_absoluteX="270dp"
+                tools:layout_editor_absoluteY="386dp" />
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="127dp"
-        android:layout_margin="@dimen/separator_padding"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="323dp">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@color/signal_primary"
-            android:padding="10dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="200dp"
-            android:text="@string/yes"
-            android:textColor="@color/white"
-            tools:layout_editor_absoluteX="32dp"
-            tools:layout_editor_absoluteY="386dp" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"></Space>
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@color/signal_primary"
-            android:padding="10dp"
-            android:paddingLeft="200dp"
-            android:paddingRight="200dp"
-            android:text="@string/not_sure"
-            android:textColor="@color/white"
-            tools:layout_editor_absoluteX="148dp"
-            tools:layout_editor_absoluteY="386dp" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"></Space>
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@color/signal_primary"
-            android:padding="10dp"
-            android:paddingLeft="200dp"
-            android:paddingRight="15dp"
-            android:text="@string/no"
-            android:textColor="@color/white"
-            tools:layout_editor_absoluteX="270dp"
-            tools:layout_editor_absoluteY="386dp" />
-    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>
