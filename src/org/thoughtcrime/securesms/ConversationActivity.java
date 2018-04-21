@@ -19,6 +19,7 @@ package org.thoughtcrime.securesms;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -191,6 +192,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
                InputPanel.Listener,
                InputPanel.MediaListener
 {
+  private String confidence;
   private static final String TAG = ConversationActivity.class.getSimpleName();
 
   public static final String ADDRESS_EXTRA           = "address";
@@ -263,8 +265,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
     Intent myIntent = new Intent(this,VerifyImage.class);
-    startActivity(myIntent);
-    
+   // startActivity(myIntent);
+    startActivityForResult(myIntent,1);
     //setContentView(R.layout.activity_verify_image);
     setContentView(R.layout.conversation_activity);
 
@@ -390,67 +392,83 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
   @Override
   public void onActivityResult(final int reqCode, int resultCode, Intent data) {
+
+    if (data != null && data.getStringExtra("result") != null) {
+      if (resultCode == Activity.RESULT_OK) {
+        if (data.getStringExtra("result").equals(VerifyImage.Confidence.Confident) ||
+                data.getStringExtra("result").equals(VerifyImage.Confidence.NoConfidence) ||
+                data.getStringExtra("result").equals(VerifyImage.Confidence.NotSure)) {
+
+          this.confidence = data.getStringExtra("result");
+        }
+      }
+      if (resultCode == Activity.RESULT_CANCELED) {
+        Log.d(TAG, "result cancled");
+        //Write your code if there's no result
+      }
+    }
+    //} else if (data != null && data.getStringExtra("result") == null) {
     Log.w(TAG, "onActivityResult called: " + reqCode + ", " + resultCode + " , " + data);
     super.onActivityResult(reqCode, resultCode, data);
 
     if ((data == null && reqCode != TAKE_PHOTO && reqCode != SMS_DEFAULT) ||
-        (resultCode != RESULT_OK && reqCode != SMS_DEFAULT))
-    {
+            (resultCode != RESULT_OK && reqCode != SMS_DEFAULT)) {
       return;
     }
 
     switch (reqCode) {
-    case PICK_GALLERY:
-      MediaType mediaType;
+      case PICK_GALLERY:
+        MediaType mediaType;
 
-      String mimeType = MediaUtil.getMimeType(this, data.getData());
+        String mimeType = MediaUtil.getMimeType(this, data.getData());
 
-      if      (MediaUtil.isGif(mimeType))   mediaType = MediaType.GIF;
-      else if (MediaUtil.isVideo(mimeType)) mediaType = MediaType.VIDEO;
-      else                                  mediaType = MediaType.IMAGE;
+        if (MediaUtil.isGif(mimeType)) mediaType = MediaType.GIF;
+        else if (MediaUtil.isVideo(mimeType)) mediaType = MediaType.VIDEO;
+        else mediaType = MediaType.IMAGE;
 
-      setMedia(data.getData(), mediaType);
-      break;
-    case PICK_DOCUMENT:
-      setMedia(data.getData(), MediaType.DOCUMENT);
-      break;
-    case PICK_AUDIO:
-      setMedia(data.getData(), MediaType.AUDIO);
-      break;
-    case PICK_CONTACT_INFO:
-      addAttachmentContactInfo(data.getData());
-      break;
-    case GROUP_EDIT:
-      recipient = Recipient.from(this, data.getParcelableExtra(GroupCreateActivity.GROUP_ADDRESS_EXTRA), true);
-      recipient.addListener(this);
-      titleView.setTitle(glideRequests, recipient);
-      setBlockedUserState(recipient, isSecureText, isDefaultSms);
-      supportInvalidateOptionsMenu();
-      break;
-    case TAKE_PHOTO:
-      if (attachmentManager.getCaptureUri() != null) {
-        setMedia(attachmentManager.getCaptureUri(), MediaType.IMAGE);
-      }
-      break;
-    case ADD_CONTACT:
-      recipient = Recipient.from(this, recipient.getAddress(), true);
-      recipient.addListener(this);
-      fragment.reloadList();
-      break;
-    case PICK_LOCATION:
-      SignalPlace place = new SignalPlace(PlacePicker.getPlace(data, this));
-      attachmentManager.setLocation(place, getCurrentMediaConstraints());
-      break;
-    case PICK_GIF:
-      setMedia(data.getData(), MediaType.GIF);
-      break;
-    case ScribbleActivity.SCRIBBLE_REQUEST_CODE:
-      setMedia(data.getData(), MediaType.IMAGE);
-      break;
-    case SMS_DEFAULT:
-      initializeSecurity(isSecureText, isDefaultSms);
-      break;
+        setMedia(data.getData(), mediaType);
+        break;
+      case PICK_DOCUMENT:
+        setMedia(data.getData(), MediaType.DOCUMENT);
+        break;
+      case PICK_AUDIO:
+        setMedia(data.getData(), MediaType.AUDIO);
+        break;
+      case PICK_CONTACT_INFO:
+        addAttachmentContactInfo(data.getData());
+        break;
+      case GROUP_EDIT:
+        recipient = Recipient.from(this, data.getParcelableExtra(GroupCreateActivity.GROUP_ADDRESS_EXTRA), true);
+        recipient.addListener(this);
+        titleView.setTitle(glideRequests, recipient);
+        setBlockedUserState(recipient, isSecureText, isDefaultSms);
+        supportInvalidateOptionsMenu();
+        break;
+      case TAKE_PHOTO:
+        if (attachmentManager.getCaptureUri() != null) {
+          setMedia(attachmentManager.getCaptureUri(), MediaType.IMAGE);
+        }
+        break;
+      case ADD_CONTACT:
+        recipient = Recipient.from(this, recipient.getAddress(), true);
+        recipient.addListener(this);
+        fragment.reloadList();
+        break;
+      case PICK_LOCATION:
+        SignalPlace place = new SignalPlace(PlacePicker.getPlace(data, this));
+        attachmentManager.setLocation(place, getCurrentMediaConstraints());
+        break;
+      case PICK_GIF:
+        setMedia(data.getData(), MediaType.GIF);
+        break;
+      case ScribbleActivity.SCRIBBLE_REQUEST_CODE:
+        setMedia(data.getData(), MediaType.IMAGE);
+        break;
+      case SMS_DEFAULT:
+        initializeSecurity(isSecureText, isDefaultSms);
+        break;
     }
+    //}
   }
 
   @Override

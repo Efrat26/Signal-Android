@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +14,10 @@ public class VerifyImage extends AppCompatActivity {
         NotSure
     }
     //user's confidence in the identity of the person they are in conversation with.
-    //1 is for yes, 0 - not sure, -1 - for no
     private Confidence confidence;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //confidence = Confidence.NotSure;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_image);
         final Button buttonYes = findViewById(R.id.verifyImageYes);
@@ -36,6 +38,12 @@ public class VerifyImage extends AppCompatActivity {
                 confidence = Confidence.NotSure;
             }
         });
+        if (confidence != null) {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("result", confidence);
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        }
     }
 
     public Confidence getConfidence(){
