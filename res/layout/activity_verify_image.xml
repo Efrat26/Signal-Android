@@ -58,7 +58,7 @@
             tools:layout_editor_absoluteY="323dp">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/verifyImageYes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -78,7 +78,7 @@
                 android:layout_weight="1"></Space>
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/verifyImageNotSure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -98,7 +98,7 @@
                 android:layout_weight="1"></Space>
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/verifyImageNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
