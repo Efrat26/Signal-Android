@@ -269,7 +269,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     startActivityForResult(myIntent,1);
     //setContentView(R.layout.activity_verify_image);
     setContentView(R.layout.conversation_activity);
-
+    if (this.confidence != null && this.confidence.equals(VerifyImage.Confidence.Confident.toString())){
+      Log.d(TAG, "hello world~!");
+    }
     TypedArray typedArray = obtainStyledAttributes(new int[] {R.attr.conversation_background});
     int color = typedArray.getColor(0, Color.WHITE);
     typedArray.recycle();
@@ -346,7 +348,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     MessageNotifier.setVisibleThread(threadId);
     markThreadAsRead();
-
+    if (this.confidence != null && this.confidence.equals(VerifyImage.Confidence.Confident.toString())){
+      Log.d(TAG, "hello world~!");
+    }
     Log.w(TAG, "onResume() Finished: " + (System.currentTimeMillis() - getIntent().getLongExtra(TIMING_EXTRA, 0)));
   }
 
@@ -392,7 +396,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
   @Override
   public void onActivityResult(final int reqCode, int resultCode, Intent data) {
-
+    if (this.confidence != null && this.confidence.equals(VerifyImage.Confidence.Confident.toString())){
+      Log.d(TAG, "hello world~!");
+    }
     if (data != null && data.getStringExtra("result") != null) {
       if (resultCode == Activity.RESULT_OK) {
         if (data.getStringExtra("result").equals(VerifyImage.Confidence.Confident) ||

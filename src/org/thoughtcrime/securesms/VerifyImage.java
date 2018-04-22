@@ -39,6 +39,11 @@ public class VerifyImage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 confidence = Confidence.NoConfidence;
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result", confidence);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+
             }
         });
         Button clickButton3 = (Button) findViewById(R.id.verifyImageNotSure);
@@ -47,6 +52,10 @@ public class VerifyImage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 confidence = Confidence.NotSure;
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result", confidence);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
             }
         });
         /*
@@ -70,12 +79,6 @@ public class VerifyImage extends AppCompatActivity {
             }
         });
          */
-        if (confidence != null) {
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("result", confidence);
-            setResult(Activity.RESULT_OK, returnIntent);
-            finish();
-        }
     }
 
     public Confidence getConfidence(){
