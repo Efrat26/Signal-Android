@@ -20,12 +20,43 @@ public class VerifyImage extends AppCompatActivity {
         //confidence = Confidence.NotSure;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_image);
+
+        Button clickButton = (Button) findViewById(R.id.verifyImageYes);
+        clickButton.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                confidence = Confidence.Confident;
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result", confidence);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+            }
+        });
+        Button clickButton2 = (Button) findViewById(R.id.verifyImageNo);
+        clickButton2.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                confidence = Confidence.NoConfidence;
+            }
+        });
+        Button clickButton3 = (Button) findViewById(R.id.verifyImageNotSure);
+        clickButton3.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                confidence = Confidence.NotSure;
+            }
+        });
+        /*
         final Button buttonYes = findViewById(R.id.verifyImageYes);
         buttonYes.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 confidence = Confidence.Confident;
             }
         });
+
         final Button buttonNo = findViewById(R.id.verifyImageYes);
         buttonNo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -38,6 +69,7 @@ public class VerifyImage extends AppCompatActivity {
                 confidence = Confidence.NotSure;
             }
         });
+         */
         if (confidence != null) {
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", confidence);
