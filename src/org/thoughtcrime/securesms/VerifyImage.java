@@ -58,30 +58,5 @@ public class VerifyImage extends AppCompatActivity {
                 finish();
             }
         });
-        /*
-        final Button buttonYes = findViewById(R.id.verifyImageYes);
-        buttonYes.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                confidence = Confidence.Confident;
-            }
-        });
-
-        final Button buttonNo = findViewById(R.id.verifyImageYes);
-        buttonNo.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                confidence = Confidence.NoConfidence;
-            }
-        });
-        final Button buttonNotSure = findViewById(R.id.verifyImageYes);
-        buttonNotSure.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                confidence = Confidence.NotSure;
-            }
-        });
-         */
-    }
-
-    public Confidence getConfidence(){
-        return this.confidence;
     }
 }
