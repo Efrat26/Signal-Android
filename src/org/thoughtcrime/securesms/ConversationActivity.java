@@ -25,6 +25,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -262,12 +263,12 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   @Override
   protected void onCreate(Bundle state, boolean ready) {
     Log.w(TAG, "onCreate()");
+    supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
     //if it's the modified version
-    if (this.confidence == null && (((ApplicationContext) this.getApplication()).getExperimentVersion() !=  0)) {
-      supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
-      Intent myIntent = new Intent(this, VerifyImage.class);
-      // startActivity(myIntent);
-      startActivityForResult(myIntent, CONFIDENCE);
+    if (this.confidence == null &&
+            (((ApplicationContext) this.getApplication()).getExperimentVersion() !=  0)) {
+        Intent myIntent = new Intent(this, VerifyImage.class);
+        startActivityForResult(myIntent, CONFIDENCE);
     }
     setContentView(R.layout.conversation_activity);
 
@@ -347,7 +348,6 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     MessageNotifier.setVisibleThread(threadId);
     markThreadAsRead();
-
     Log.w(TAG, "onResume() Finished: " + (System.currentTimeMillis() - getIntent().getLongExtra(TIMING_EXTRA, 0)));
   }
 

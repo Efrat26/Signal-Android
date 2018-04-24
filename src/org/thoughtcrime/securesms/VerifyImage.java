@@ -8,14 +8,13 @@ import android.view.View;
 import android.widget.Button;
 
 public class VerifyImage extends AppCompatActivity {
-    public enum Confidence {
-        NoConfidence,
-        Confident,
-        NotSure
-    }
+
+    private static final int CONFIDENT      = 1;
+    private static final int NOT_CONFIDENT     = 2;
+    private static final int NOT_SURE        = 3;
     Button b_yes, b_no, b_notSure;
     //user's confidence in the identity of the person they are in conversation with.
-    private Confidence confidence;
+    private int confidence;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //confidence = Confidence.NotSure;
@@ -27,7 +26,7 @@ public class VerifyImage extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                confidence = Confidence.Confident;
+                confidence = CONFIDENT;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", "confident");
                 setResult(Activity.RESULT_OK, returnIntent);
@@ -39,7 +38,7 @@ public class VerifyImage extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                confidence = Confidence.NoConfidence;
+                confidence = NOT_CONFIDENT;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", "not confident");
                 setResult(Activity.RESULT_OK, returnIntent);
@@ -52,7 +51,7 @@ public class VerifyImage extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                confidence = Confidence.NotSure;
+                confidence = NOT_SURE;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", "not sure");
                 setResult(Activity.RESULT_OK, returnIntent);
