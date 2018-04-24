@@ -64,6 +64,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -457,7 +458,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
           if(((ApplicationContext) this.getApplication()).getExperimentVersion() != 0) {
             if (resultCode == Activity.RESULT_OK) {
               this.confidence = data.getStringExtra("result");
-              //Log.d(TAG, data.getStringExtra("result"));
+              titleView.setExperimentVersion(((ApplicationContext)this.getApplication()).getExperimentVersion());
+              titleView.setVerified(true, this.confidence);
             }
           }
           break;
@@ -1208,7 +1210,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
           unverifiedBannerView.get().hide();
         }
 
-        titleView.setVerified(isSecureText && identityRecords.isVerified());
+        titleView.setVerified(isSecureText && identityRecords.isVerified(), null);
 
         future.set(true);
       }
@@ -1341,7 +1343,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     Util.runOnMain(() -> {
       Log.w(TAG, "onModifiedRun(): " + recipient.getRegistered());
       titleView.setTitle(glideRequests, recipient);
-      titleView.setVerified(identityRecords.isVerified());
+      titleView.setVerified(identityRecords.isVerified(), null);
       setBlockedUserState(recipient, isSecureText, isDefaultSms);
       setActionBarColor(recipient.getColor());
       setGroupShareProfileReminder(recipient);

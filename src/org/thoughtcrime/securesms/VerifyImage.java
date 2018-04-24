@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.Button;
 
 public class VerifyImage extends AppCompatActivity {
-
+    public static final String CONFIDENT_STRING = "confident";
+    public static final String NOT_CONFIDENT_STRING = "not confident";
+    public static final String NOT_SURE_CONFIDENT_STRING = "not sure";
     private static final int CONFIDENT      = 1;
     private static final int NOT_CONFIDENT     = 2;
     private static final int NOT_SURE        = 3;
@@ -28,7 +30,7 @@ public class VerifyImage extends AppCompatActivity {
             public void onClick(View v) {
                 confidence = CONFIDENT;
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", "confident");
+                returnIntent.putExtra("result", CONFIDENT_STRING);
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
@@ -40,7 +42,7 @@ public class VerifyImage extends AppCompatActivity {
             public void onClick(View v) {
                 confidence = NOT_CONFIDENT;
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", "not confident");
+                returnIntent.putExtra("result", NOT_CONFIDENT_STRING);
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
 
@@ -53,7 +55,7 @@ public class VerifyImage extends AppCompatActivity {
             public void onClick(View v) {
                 confidence = NOT_SURE;
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", "not sure");
+                returnIntent.putExtra("result", NOT_SURE_CONFIDENT_STRING);
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }

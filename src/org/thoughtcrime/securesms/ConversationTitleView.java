@@ -34,13 +34,15 @@ public class ConversationTitleView extends RelativeLayout {
   private TextView        title;
   private TextView        subtitle;
   private ImageView       verified;
+  private String levelOfConfidence;
+  private int experimentVersion;//0 is the original version
 
   public ConversationTitleView(Context context) {
-    this(context, null);
+    this(context, null); this.experimentVersion = 0;
   }
 
   public ConversationTitleView(Context context, AttributeSet attrs) {
-    super(context, attrs);
+    super(context, attrs);this.experimentVersion = 0;
 
   }
 
@@ -76,8 +78,27 @@ public class ConversationTitleView extends RelativeLayout {
     }
   }
 
-  public void setVerified(boolean verified) {
-    this.verified.setVisibility(verified ? View.VISIBLE : View.GONE);
+  public void setVerified(boolean verified, String levelOfConfidence) {
+    if (levelOfConfidence!= null){
+      this.levelOfConfidence = levelOfConfidence;
+    }
+    if (this.experimentVersion != 0){
+      switch (this.levelOfConfidence){
+        case VerifyImage.CONFIDENT_STRING:
+          this.verified.setVisibility(View.VISIBLE);
+          break;
+        case VerifyImage.NOT_CONFIDENT_STRING:
+
+          break;
+
+        case VerifyImage.NOT_SURE_CONFIDENT_STRING:
+
+          break;
+      }
+    }
+    else {
+      this.verified.setVisibility(verified ? View.VISIBLE : View.GONE);
+    }
   }
 
   @Override
@@ -140,5 +161,8 @@ public class ConversationTitleView extends RelativeLayout {
     else                                    this.subtitle.setText(recipient.getAddress().serialize());
 
     this.subtitle.setVisibility(View.VISIBLE);
+  }
+  public void setExperimentVersion(int version){
+    this.experimentVersion = version;
   }
 }
