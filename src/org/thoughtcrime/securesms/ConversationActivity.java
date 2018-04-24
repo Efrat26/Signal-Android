@@ -213,7 +213,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   private static final int PICK_LOCATION     = 8;
   private static final int PICK_GIF          = 9;
   private static final int SMS_DEFAULT       = 10;
-
+  private static final int CONFIDENCE       = 11;
   private   GlideRequests               glideRequests;
   protected ComposeText                 composeText;
   private   AnimatingToggle             buttonToggle;
@@ -267,14 +267,10 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
       Intent myIntent = new Intent(this, VerifyImage.class);
       // startActivity(myIntent);
-      startActivityForResult(myIntent, 1);
-    } else if (this.confidence != null){
-      Log.d(TAG, this.confidence.toString());
+      startActivityForResult(myIntent, CONFIDENCE);
     }
     setContentView(R.layout.conversation_activity);
-    if (this.confidence != null && this.confidence.equals(VerifyImage.Confidence.Confident.toString())){
-      Log.d(TAG, "hello world~!");
-    }
+
     TypedArray typedArray = obtainStyledAttributes(new int[] {R.attr.conversation_background});
     int color = typedArray.getColor(0, Color.WHITE);
     typedArray.recycle();
@@ -397,23 +393,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
   @Override
   public void onActivityResult(final int reqCode, int resultCode, Intent data) {
-    if (((ApplicationContext) this.getApplication()).getExperimentVersion() != 0) {
-      if (data != null && data.getStringExtra("result") != null) {
-        if (resultCode == Activity.RESULT_OK) {
-          if (data.getStringExtra("result").equals(VerifyImage.Confidence.Confident) ||
-                  data.getStringExtra("result").equals(VerifyImage.Confidence.NoConfidence) ||
-                  data.getStringExtra("result").equals(VerifyImage.Confidence.NotSure)) {
 
-            this.confidence = data.getStringExtra("result");
-          }
-        }
-        if (resultCode == Activity.RESULT_CANCELED) {
-          Log.d(TAG, "result cancled");
-          //Write your code if there's no result
-        }
-      }
-    }
-      //} else if (data != null && data.getStringExtra("result") == null) {
       Log.w(TAG, "onActivityResult called: " + reqCode + ", " + resultCode + " , " + data);
       super.onActivityResult(reqCode, resultCode, data);
 
@@ -472,6 +452,14 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
           break;
         case SMS_DEFAULT:
           initializeSecurity(isSecureText, isDefaultSms);
+          break;
+        case CONFIDENCE:
+          if(((ApplicationContext) this.getApplication()).getExperimentVersion() != 0) {
+            if (resultCode == Activity.RESULT_OK) {
+              this.confidence = data.getStringExtra("result");
+              //Log.d(TAG, data.getStringExtra("result"));
+            }
+          }
           break;
       }
       //}

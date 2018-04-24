@@ -13,6 +13,7 @@ public class VerifyImage extends AppCompatActivity {
         Confident,
         NotSure
     }
+    Button b_yes, b_no, b_notSure;
     //user's confidence in the identity of the person they are in conversation with.
     private Confidence confidence;
     @Override
@@ -21,39 +22,39 @@ public class VerifyImage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_image);
 
-        Button clickButton = (Button) findViewById(R.id.verifyImageYes);
-        clickButton.setOnClickListener( new View.OnClickListener() {
+        b_yes = (Button) findViewById(R.id.verifyImageYes);
+        b_yes.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 confidence = Confidence.Confident;
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", confidence);
+                returnIntent.putExtra("result", "confident");
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
         });
-        Button clickButton2 = (Button) findViewById(R.id.verifyImageNo);
-        clickButton2.setOnClickListener( new View.OnClickListener() {
+        b_no = (Button) findViewById(R.id.verifyImageNo);
+        b_no.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 confidence = Confidence.NoConfidence;
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", confidence);
+                returnIntent.putExtra("result", "not confident");
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
 
             }
         });
-        Button clickButton3 = (Button) findViewById(R.id.verifyImageNotSure);
-        clickButton3.setOnClickListener( new View.OnClickListener() {
+        b_notSure= (Button) findViewById(R.id.verifyImageNotSure);
+        b_notSure.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 confidence = Confidence.NotSure;
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", confidence);
+                returnIntent.putExtra("result", "not sure");
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
