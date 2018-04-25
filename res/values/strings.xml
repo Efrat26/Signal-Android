@@ -1401,7 +1401,7 @@
     <string name="preferences_chats__backups">Backups</string>
 
     <!-- verify image activity -->
-    <string name="how_confident">How confident are you about this person\'s identity?</string>
+    <string name="how_confident">Are you confident regarding this person\'s identity?</string>
     <string name="not_sure">not sure</string>
 
     <!-- certification -->
