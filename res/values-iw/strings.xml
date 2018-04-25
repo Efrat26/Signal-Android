@@ -1109,5 +1109,11 @@
 
   <!-- biu settings-->
   <string name ="preference_file_key"></string>
+
+  <!-- is user legitimate -->
+  <string name="is_user_legitimate">האם לדעתך איש/אשת הקשר לגיטימי או נוכל/ת?</string>
+  <string name="legitimate">לגיטימי/ת</string>
+  <string name="fraud">נוכל/ת</string>
+  <string name="dontKnow">לא יודע/ת</string>
   <!--EOF-->
 </resources>

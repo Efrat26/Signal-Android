@@ -1409,7 +1409,13 @@
     <string name="not_marked_safety">You haven\'t marked you safety number with </string>
 
     <!-- biu settings-->
-    <string name ="preference_file_key"></string>
+    <string name="preference_file_key"></string>
+
+    <!-- is user legitimate -->
+    <string name="is_user_legitimate">Do you think this user is legitimate or fraud?</string>
+    <string name="legitimate">legitimate</string>
+    <string name="fraud">fraud</string>
+    <string name="dontKnow">I don\'t know</string>
     <!-- EOF -->
 
 </resources>
