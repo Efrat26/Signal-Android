@@ -46,6 +46,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -172,6 +173,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static android.app.PendingIntent.getActivity;
 import static org.thoughtcrime.securesms.TransportOption.Type;
 import static org.thoughtcrime.securesms.database.GroupDatabase.GroupRecord;
 import static org.whispersystems.libsignal.SessionCipher.SESSION_LOCK;
@@ -265,12 +267,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   protected void onCreate(Bundle state, boolean ready) {
     Log.w(TAG, "onCreate()");
     supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
-    //if it's the modified version
-    if (this.confidence == null &&
-            (((ApplicationContext) this.getApplication()).getExperimentVersion() !=  0)) {
-        Intent myIntent = new Intent(this, VerifyImage.class);
-        startActivityForResult(myIntent, CONFIDENCE);
-    }
+
+
     setContentView(R.layout.conversation_activity);
 
     TypedArray typedArray = obtainStyledAttributes(new int[] {R.attr.conversation_background});
@@ -292,6 +290,18 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         initializeDraft();
       }
     });
+    //if it's the modified version
+    boolean alreadyAsked = false;
+    if (this.recipient!= null) {
+      SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+      alreadyAsked = sharedPref.contains(this.recipient.getAddress().toString());
+    }
+    if (!alreadyAsked && this.confidence == null &&
+            (((ApplicationContext) this.getApplication()).getExperimentVersion() != 0)) {
+      Intent myIntent = new Intent(this, VerifyImage.class);
+      startActivityForResult(myIntent, CONFIDENCE);
+
+    }
   }
 
   @Override
@@ -460,6 +470,10 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
               this.confidence = data.getStringExtra("result");
               titleView.setExperimentVersion(((ApplicationContext)this.getApplication()).getExperimentVersion());
               titleView.setVerified(true, this.confidence);
+              SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+              SharedPreferences.Editor editor = sharedPref.edit();
+              editor.putBoolean(this.recipient.getAddress().toString(),true );
+              editor.commit();
             }
           }
           break;
