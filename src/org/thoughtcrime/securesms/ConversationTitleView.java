@@ -34,6 +34,8 @@ public class ConversationTitleView extends RelativeLayout {
   private TextView        title;
   private TextView        subtitle;
   private ImageView       verified;
+  private ImageView       not_verified;
+  private ImageView       not_sure_verified;
   private String levelOfConfidence;
   private int experimentVersion;//0 is the original version
 
@@ -55,6 +57,8 @@ public class ConversationTitleView extends RelativeLayout {
     this.title    = ViewUtil.findById(this, R.id.title);
     this.subtitle = ViewUtil.findById(this, R.id.subtitle);
     this.verified = ViewUtil.findById(this, R.id.verified_indicator);
+    this.not_verified = ViewUtil.findById(this, R.id.not_verified_indicator);
+    this.not_sure_verified = ViewUtil.findById(this, R.id.not_sure_verified_indicator);
     this.avatar   = ViewUtil.findById(this, R.id.contact_photo_image);
 
     ViewUtil.setTextViewGravityStart(this.title, getContext());
@@ -88,11 +92,11 @@ public class ConversationTitleView extends RelativeLayout {
           this.verified.setVisibility(View.VISIBLE);
           break;
         case VerifyImage.NOT_CONFIDENT_STRING:
-
+          this.not_verified.setVisibility(View.VISIBLE);
           break;
 
         case VerifyImage.NOT_SURE_CONFIDENT_STRING:
-
+          this.not_sure_verified.setVisibility(View.VISIBLE);
           break;
       }
     }
