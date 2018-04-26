@@ -302,6 +302,13 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     if (!alreadyAsked && this.legitimateUser == null &&
             (((ApplicationContext) this.getApplication()).getExperimentVersion() != 0)) {
       Intent legitimateUserIntent = new Intent(this, IsUserLegitimate.class);
+      if (this.recipient.getName() != null) {
+        legitimateUserIntent.putExtra("recipient name", this.recipient.getName().toString());
+      }
+      if (this.recipient.getProfileName() != null) {
+        legitimateUserIntent.putExtra("recipient profile name", this.recipient.getProfileName().toString());
+      }
+
       startActivityForResult(legitimateUserIntent, LEGITIMATE);
     }
      if (alreadyAsked){
