@@ -163,6 +163,7 @@ import org.thoughtcrime.securesms.util.concurrent.AssertedSuccessListener;
 import org.thoughtcrime.securesms.util.concurrent.ListenableFuture;
 import org.thoughtcrime.securesms.util.concurrent.SettableFuture;
 import org.thoughtcrime.securesms.util.views.Stub;
+import org.thoughtcrime.securesms.webrtc.IsUserLegitimate;
 import org.whispersystems.libsignal.InvalidMessageException;
 import org.whispersystems.libsignal.util.guava.Optional;
 
@@ -196,7 +197,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
                InputPanel.Listener,
                InputPanel.MediaListener
 {
-  private String confidence;
+  private String confidence, legitimateUser;
   private static final String TAG = ConversationActivity.class.getSimpleName();
 
   public static final String ADDRESS_EXTRA           = "address";
@@ -218,6 +219,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   private static final int PICK_GIF          = 9;
   private static final int SMS_DEFAULT       = 10;
   private static final int CONFIDENCE       = 11;
+  private static final int LEGITIMATE       = 12;
   private   GlideRequests               glideRequests;
   protected ComposeText                 composeText;
   private   AnimatingToggle             buttonToggle;
@@ -296,15 +298,18 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     if (this.recipient!= null) {
      alreadyAsked = sharedPref.contains(this.recipient.getAddress().toString());
     }
-    if (!alreadyAsked && this.confidence == null &&
+    //alreadyAsked = false;
+    if (!alreadyAsked && this.legitimateUser == null &&
             (((ApplicationContext) this.getApplication()).getExperimentVersion() != 0)) {
-      Intent myIntent = new Intent(this, VerifyImage.class);
-      startActivityForResult(myIntent, CONFIDENCE);
-
-    } else if (alreadyAsked){
+      Intent legitimateUserIntent = new Intent(this, IsUserLegitimate.class);
+      startActivityForResult(legitimateUserIntent, LEGITIMATE);
+    }
+     if (alreadyAsked){
       String confidence_temp = sharedPref.getString(this.recipient.getAddress().toString(),null);
       if (confidence_temp != null){
+        //set the experiment version in case it didn't saved
         titleView.setExperimentVersion(((ApplicationContext) this.getApplication()).getExperimentVersion());
+        //set the icon near the number
         titleView.setVerified(true, confidence_temp);
       }
 
@@ -483,6 +488,17 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
               editor.commit();
               editor.putString(this.recipient.getAddress().toString(), this.confidence);
               editor.commit();
+            }
+          }
+          break;
+        case LEGITIMATE:
+          if(((ApplicationContext) this.getApplication()).getExperimentVersion() != 0) {
+            if (resultCode == Activity.RESULT_OK) {
+              this.legitimateUser = data.getStringExtra("result");
+              if ((!this.legitimateUser.equals(IsUserLegitimate.DONT_KNOW_STRING))) {
+                Intent myIntent = new Intent(this, VerifyImage.class);
+                startActivityForResult(myIntent, CONFIDENCE);
+              }
             }
           }
           break;

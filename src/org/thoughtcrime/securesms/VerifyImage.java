@@ -11,15 +11,9 @@ public class VerifyImage extends AppCompatActivity {
     public static final String CONFIDENT_STRING = "confident";
     public static final String NOT_CONFIDENT_STRING = "not confident";
     public static final String NOT_SURE_CONFIDENT_STRING = "not sure";
-    //private static final int CONFIDENT      = 1;
-    //private static final int NOT_CONFIDENT     = 2;
-    //private static final int NOT_SURE        = 3;
     Button b_yes, b_no, b_notSure;
-    //user's confidence in the identity of the person they are in conversation with.
-    //private int confidence;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //confidence = Confidence.NotSure;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_image);
 
@@ -40,7 +34,6 @@ public class VerifyImage extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //confidence = NOT_CONFIDENT;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", NOT_CONFIDENT_STRING);
                 setResult(Activity.RESULT_OK, returnIntent);
@@ -53,7 +46,6 @@ public class VerifyImage extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-               // confidence = NOT_SURE;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", NOT_SURE_CONFIDENT_STRING);
                 setResult(Activity.RESULT_OK, returnIntent);
