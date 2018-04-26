@@ -292,14 +292,21 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     });
     //if it's the modified version
     boolean alreadyAsked = false;
+    SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
     if (this.recipient!= null) {
-      SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-      alreadyAsked = sharedPref.contains(this.recipient.getAddress().toString());
+     alreadyAsked = sharedPref.contains(this.recipient.getAddress().toString());
     }
     if (!alreadyAsked && this.confidence == null &&
             (((ApplicationContext) this.getApplication()).getExperimentVersion() != 0)) {
       Intent myIntent = new Intent(this, VerifyImage.class);
       startActivityForResult(myIntent, CONFIDENCE);
+
+    } else if (alreadyAsked){
+      String confidence_temp = sharedPref.getString(this.recipient.getAddress().toString(),null);
+      if (confidence_temp != null){
+        titleView.setExperimentVersion(((ApplicationContext) this.getApplication()).getExperimentVersion());
+        titleView.setVerified(true, confidence_temp);
+      }
 
     }
   }
@@ -473,6 +480,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
               SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
               SharedPreferences.Editor editor = sharedPref.edit();
               editor.putBoolean(this.recipient.getAddress().toString(),true );
+              editor.commit();
+              editor.putString(this.recipient.getAddress().toString(), this.confidence);
               editor.commit();
             }
           }

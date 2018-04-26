@@ -57,7 +57,7 @@
             tools:layout_editor_absoluteY="323dp">
 
             <Button
-                android:id="@+id/legitimate"
+                android:id="@+id/legitimateButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -77,7 +77,7 @@
                 android:layout_weight="1"></Space>
 
             <Button
-                android:id="@+id/dontKnow"
+                android:id="@+id/dontKnowButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -97,7 +97,7 @@
                 android:layout_weight="1"></Space>
 
             <Button
-                android:id="@+id/fraud"
+                android:id="@+id/fraudButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
