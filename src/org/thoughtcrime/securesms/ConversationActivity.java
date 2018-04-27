@@ -308,7 +308,6 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       if (this.recipient.getProfileName() != null) {
         legitimateUserIntent.putExtra("recipient profile name", this.recipient.getProfileName().toString());
       }
-
       startActivityForResult(legitimateUserIntent, LEGITIMATE);
     }
      if (alreadyAsked){
@@ -505,6 +504,18 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
               if ((!this.legitimateUser.equals(IsUserLegitimate.DONT_KNOW_STRING))) {
                 Intent myIntent = new Intent(this, VerifyImage.class);
                 startActivityForResult(myIntent, CONFIDENCE);
+                // else - if the user answered she\he doesn't know if it's a fraud or legitimate
+                //treat confidence as not sure case
+              } else{
+                this.confidence = VerifyImage.NOT_SURE_CONFIDENT_STRING;
+                titleView.setExperimentVersion(((ApplicationContext)this.getApplication()).getExperimentVersion());
+                titleView.setVerified(true, this.confidence);
+                SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean(this.recipient.getAddress().toString(),true );
+                editor.commit();
+                editor.putString(this.recipient.getAddress().toString(), this.confidence);
+                editor.commit();
               }
             }
           }
