@@ -33,10 +33,11 @@ public class ConversationTitleView extends RelativeLayout {
   private AvatarImageView avatar;
   private TextView        title;
   private TextView        subtitle;
-  private ImageView       verified;
-  private ImageView       not_verified;
-  private ImageView       not_sure_verified;
+  private ImageView       verifiedIndicator;
+  //private ImageView       not_verified;
+ // private ImageView       not_sure_verified;
   private String levelOfConfidence;
+  private TextView publicKey;
   private int experimentVersion;//0 is the original version
 
   public ConversationTitleView(Context context) {
@@ -56,11 +57,11 @@ public class ConversationTitleView extends RelativeLayout {
     this.content  = ViewUtil.findById(this, R.id.content);
     this.title    = ViewUtil.findById(this, R.id.title);
     this.subtitle = ViewUtil.findById(this, R.id.subtitle);
-    this.verified = ViewUtil.findById(this, R.id.verified_indicator);
-    this.not_verified = ViewUtil.findById(this, R.id.not_verified_indicator);
-    this.not_sure_verified = ViewUtil.findById(this, R.id.not_sure_verified_indicator);
+    this.verifiedIndicator = ViewUtil.findById(this, R.id.verified_indicator);
+    //this.not_verified = ViewUtil.findById(this, R.id.not_verified_indicator);
+    //this.not_sure_verified = ViewUtil.findById(this, R.id.not_sure_verified_indicator);
     this.avatar   = ViewUtil.findById(this, R.id.contact_photo_image);
-
+    this.publicKey = ViewUtil.findById(this, R.id.public_key);
     ViewUtil.setTextViewGravityStart(this.title, getContext());
     ViewUtil.setTextViewGravityStart(this.subtitle, getContext());
   }
@@ -89,19 +90,41 @@ public class ConversationTitleView extends RelativeLayout {
     if (this.experimentVersion != 0){
       switch (this.levelOfConfidence){
         case VerifyImage.CONFIDENT_STRING:
-          this.verified.setVisibility(View.VISIBLE);
+          this.verifiedIndicator.setVisibility(View.VISIBLE);
           break;
         case VerifyImage.NOT_CONFIDENT_STRING:
-          this.not_verified.setVisibility(View.VISIBLE);
+          this.verifiedIndicator.setVisibility(View.VISIBLE);
           break;
 
         case VerifyImage.NOT_SURE_CONFIDENT_STRING:
-          this.not_sure_verified.setVisibility(View.VISIBLE);
+          this.verifiedIndicator.setVisibility(View.VISIBLE);
           break;
       }
     }
     else {
-      this.verified.setVisibility(verified ? View.VISIBLE : View.GONE);
+      this.verifiedIndicator.setVisibility(verified ? View.VISIBLE : View.GONE);
+    }
+  }
+  public void setPublicKey(String key, boolean shouldBeVisible){
+    this.publicKey.setText(key);
+
+    this.publicKey.setVisibility(shouldBeVisible ? View.VISIBLE : View.GONE);
+  }
+  public void setImageResource(String confidence ) {
+    if (confidence != null) {
+      this.levelOfConfidence=confidence;
+      switch (this.levelOfConfidence) {
+        case VerifyImage.CONFIDENT_STRING:
+          this.verifiedIndicator.setImageResource(R.drawable.ic_check_circle_white_18dp);
+          break;
+        case VerifyImage.NOT_CONFIDENT_STRING:
+          this.verifiedIndicator.setImageResource(R.drawable.ic_error_red_18dp);
+          break;
+
+        case VerifyImage.NOT_SURE_CONFIDENT_STRING:
+          this.verifiedIndicator.setImageResource(R.drawable.ic_pan_tool_black_18dp);
+          break;
+      }
     }
   }
 

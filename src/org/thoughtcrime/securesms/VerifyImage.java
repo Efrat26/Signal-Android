@@ -6,12 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import org.thoughtcrime.securesms.webrtc.IsUserLegitimate;
 
 public class VerifyImage extends AppCompatActivity {
     public static final String CONFIDENT_STRING = "confident";
     public static final String NOT_CONFIDENT_STRING = "not confident";
     public static final String NOT_SURE_CONFIDENT_STRING = "not sure";
     Button b_yes, b_no, b_notSure;
+    TextView publicKey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +26,6 @@ public class VerifyImage extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-               // confidence = CONFIDENT;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", CONFIDENT_STRING);
                 setResult(Activity.RESULT_OK, returnIntent);
