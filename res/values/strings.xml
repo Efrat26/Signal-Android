@@ -1417,7 +1417,7 @@
     <string name="fraud">fraud</string>
     <string name="dontKnow">I don\'t know</string>
     <!-- public key -->
-    <string name="publicKey">public key: </string>
+    <string name="public_key">public key: </string>
     <!-- EOF -->
 
 </resources>
