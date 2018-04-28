@@ -1115,5 +1115,7 @@
   <string name="legitimate">לגיטימי/ת</string>
   <string name="fraud">נוכל/ת</string>
   <string name="dontKnow">לא יודע/ת</string>
+  <!-- public key -->
+  <string name="publicKey">מפתח ציבורי: </string>
   <!--EOF-->
 </resources>

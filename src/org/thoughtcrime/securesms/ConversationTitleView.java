@@ -106,7 +106,7 @@ public class ConversationTitleView extends RelativeLayout {
     }
   }
   public void setPublicKey(String key, boolean shouldBeVisible){
-    this.publicKey.setText(key);
+    this.publicKey.setText(R.string.publicKey +key);
 
     this.publicKey.setVisibility(shouldBeVisible ? View.VISIBLE : View.GONE);
   }
