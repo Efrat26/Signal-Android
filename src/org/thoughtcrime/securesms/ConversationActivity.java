@@ -307,8 +307,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         }
       }
       //alreadyAsked = false;
-      //if not already asked - strat the legitimate user activity
-      //send parameters of names (contact name if thh peer is in contacts and profile name -
+      //if not already asked - start the legitimate user activity
+      //send parameters of names (contact name if the peer is in contacts and profile name -
       // the name in the application)
       if (!alreadyAsked && this.legitimateUser == null) {
         Intent legitimateUserIntent = new Intent(this, IsUserLegitimate.class);
