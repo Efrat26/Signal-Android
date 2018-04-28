@@ -273,7 +273,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     setContentView(R.layout.conversation_activity);
 
-    TypedArray typedArray = obtainStyledAttributes(new int[] {R.attr.conversation_background});
+    TypedArray typedArray = obtainStyledAttributes(new int[]{R.attr.conversation_background});
     int color = typedArray.getColor(0, Color.WHITE);
     typedArray.recycle();
 
@@ -293,39 +293,43 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       }
     });
     //if it's the modified version
-    boolean alreadyAsked = false;
-    SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-    if (this.recipient!= null) {
-     alreadyAsked = sharedPref.contains(this.recipient.getAddress().toString());
-    }
-    //if the user selected that she\he not confident - show the verifying image again
-    if(alreadyAsked){
-      String confidence_temp = sharedPref.getString(this.recipient.getAddress().toString(),null);
-      if (confidence_temp != null && confidence_temp.equals(VerifyImage.NOT_CONFIDENT_STRING)){
-        alreadyAsked = false;
+    if ((((ApplicationContext) this.getApplication()).getExperimentVersion() != 0)) {
+      boolean alreadyAsked = false;
+      SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+      if (this.recipient != null) {
+        alreadyAsked = sharedPref.contains(this.recipient.getAddress().toString());
       }
-    }
-    //alreadyAsked = false;
-    if (!alreadyAsked && this.legitimateUser == null &&
-            (((ApplicationContext) this.getApplication()).getExperimentVersion() != 0)) {
-      Intent legitimateUserIntent = new Intent(this, IsUserLegitimate.class);
-      if (this.recipient.getName() != null) {
-        legitimateUserIntent.putExtra("recipient name", this.recipient.getName().toString());
+      //if the user selected that she\he not confident - show the verifying image again
+      if (alreadyAsked) {
+        String confidence_temp = sharedPref.getString(this.recipient.getAddress().toString(), null);
+        if (confidence_temp != null && confidence_temp.equals(VerifyImage.NOT_CONFIDENT_STRING)) {
+          alreadyAsked = false;
+        }
       }
-      if (this.recipient.getProfileName() != null) {
-        legitimateUserIntent.putExtra("recipient profile name", this.recipient.getProfileName().toString());
+      //alreadyAsked = false;
+      //if not already asked - strat the legitimate user activity
+      //send parameters of names (contact name if thh peer is in contacts and profile name -
+      // the name in the application)
+      if (!alreadyAsked && this.legitimateUser == null) {
+        Intent legitimateUserIntent = new Intent(this, IsUserLegitimate.class);
+        if (this.recipient.getName() != null) {
+          legitimateUserIntent.putExtra("recipient name", this.recipient.getName().toString());
+        }
+        if (this.recipient.getProfileName() != null) {
+          legitimateUserIntent.putExtra("recipient profile name", this.recipient.getProfileName().toString());
+        }
+        startActivityForResult(legitimateUserIntent, LEGITIMATE);
       }
-      startActivityForResult(legitimateUserIntent, LEGITIMATE);
-    }
-     if (alreadyAsked){
-      String confidence_temp = sharedPref.getString(this.recipient.getAddress().toString(),null);
-      if (confidence_temp != null){
-        //set the experiment version in case it didn't saved
-        titleView.setExperimentVersion(((ApplicationContext) this.getApplication()).getExperimentVersion());
-        //set the icon near the number
-        titleView.setVerified(true, confidence_temp);
+      //if already asked - set the verification sign according to the user's answer
+      if (alreadyAsked) {
+        String confidence_temp = sharedPref.getString(this.recipient.getAddress().toString(), null);
+        if (confidence_temp != null) {
+          //set the experiment version in case it didn't saved
+          titleView.setExperimentVersion(((ApplicationContext) this.getApplication()).getExperimentVersion());
+          //set the icon near the number
+          titleView.setVerified(true, confidence_temp);
+        }
       }
-
     }
   }
 
@@ -492,28 +496,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         case CONFIDENCE:
           if(((ApplicationContext) this.getApplication()).getExperimentVersion() != 0) {
             if (resultCode == Activity.RESULT_OK) {
-              this.confidence = data.getStringExtra("result");
-              titleView.setExperimentVersion(((ApplicationContext)this.getApplication()).getExperimentVersion());
-              titleView.setImageResource(this.confidence);
-              titleView.setVerified(true, this.confidence);
-              SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-              SharedPreferences.Editor editor = sharedPref.edit();
-              if (!this.confidence.equals(VerifyImage.NOT_CONFIDENT_STRING)
-                      && !this.legitimateUser.equals(IsUserLegitimate.FRAUD_STRING)) {
-                editor.putBoolean(this.recipient.getAddress().toString(), true);
-              } else{
-                editor.putBoolean(this.recipient.getAddress().toString(), false);
-              }
-              editor.commit();
-              editor.putString(this.recipient.getAddress().toString(), this.confidence);
-              editor.commit();
-              if (this.confidence.equals(VerifyImage.NOT_CONFIDENT_STRING)
-                      && this.legitimateUser.equals(IsUserLegitimate.FRAUD_STRING)) {
-                  finish();
-              } else if(this.confidence.equals(VerifyImage.CONFIDENT_STRING)
-                      && this.legitimateUser.equals(IsUserLegitimate.LEGITIMATE_STRING)){
-                  this.titleView.setPublicKey("example", true);
-              }
+              this.handleConfidenceResult_caseLegitimateOrFraud(data.getStringExtra("result"));
             }
           }
           break;
@@ -528,16 +511,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
                 // else - if the user answered she\he doesn't know if it's a fraud or legitimate
                 //treat confidence as not sure case
               } else{
-                this.confidence = VerifyImage.NOT_SURE_CONFIDENT_STRING;
-                titleView.setExperimentVersion(((ApplicationContext)this.getApplication()).getExperimentVersion());
-                titleView.setImageResource(this.confidence);
-                titleView.setVerified(true, this.confidence);
-                SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putBoolean(this.recipient.getAddress().toString(),true );
-                editor.commit();
-                editor.putString(this.recipient.getAddress().toString(), this.confidence);
-                editor.commit();
+                this.handleConfidenceResult_caseDontKnow(VerifyImage.NOT_SURE_CONFIDENT_STRING);
               }
             }
           }
@@ -545,8 +519,42 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       }
       //}
     }
-
-
+private void handleConfidenceResult_caseLegitimateOrFraud(String confidence){
+  this.confidence = confidence;
+  titleView.setExperimentVersion(((ApplicationContext)this.getApplication()).getExperimentVersion());
+  titleView.setImageResource(this.confidence);
+  titleView.setVerified(true, this.confidence);
+  SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+  SharedPreferences.Editor editor = sharedPref.edit();
+  if (!this.confidence.equals(VerifyImage.NOT_CONFIDENT_STRING)
+          && !this.legitimateUser.equals(IsUserLegitimate.FRAUD_STRING)) {
+    editor.putBoolean(this.recipient.getAddress().toString(), true);
+  } else{
+    editor.putBoolean(this.recipient.getAddress().toString(), false);
+  }
+  editor.commit();
+  editor.putString(this.recipient.getAddress().toString(), this.confidence);
+  editor.commit();
+  if (this.confidence.equals(VerifyImage.NOT_CONFIDENT_STRING)
+          && this.legitimateUser.equals(IsUserLegitimate.FRAUD_STRING)) {
+    finish();
+  } else if(this.confidence.equals(VerifyImage.CONFIDENT_STRING)
+          && this.legitimateUser.equals(IsUserLegitimate.LEGITIMATE_STRING)){
+    this.titleView.setPublicKey("example", true);
+  }
+}
+private void handleConfidenceResult_caseDontKnow(String confidence){
+  this.confidence = confidence;
+  titleView.setExperimentVersion(((ApplicationContext)this.getApplication()).getExperimentVersion());
+  titleView.setImageResource(this.confidence);
+  titleView.setVerified(true, this.confidence);
+  SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+  SharedPreferences.Editor editor = sharedPref.edit();
+  editor.putBoolean(this.recipient.getAddress().toString(),true );
+  editor.commit();
+  editor.putString(this.recipient.getAddress().toString(), this.confidence);
+  editor.commit();
+}
   @Override
   public void startActivity(Intent intent) {
     if (intent.getStringExtra(Browser.EXTRA_APPLICATION_ID) != null) {
