@@ -330,6 +330,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
           titleView.setVerified(true, confidence_temp);
           if (confidence_temp.equals(VerifyImage.CONFIDENT_STRING)) {
             titleView.setPublicKey("example", true);
+
           }
         }
       }

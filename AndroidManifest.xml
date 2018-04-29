@@ -650,7 +650,8 @@
             android:value="598.0dip" />
 
         <activity android:name=".VerifyImage" />
-        <activity android:name=".webrtc.IsUserLegitimate"></activity>
+        <activity android:name=".webrtc.IsUserLegitimate" />
+        <activity android:name=".TrainingFeedback"></activity>
     </application>
 
 </manifest>
