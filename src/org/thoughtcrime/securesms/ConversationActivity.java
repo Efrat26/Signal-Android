@@ -328,6 +328,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
           titleView.setExperimentVersion(((ApplicationContext) this.getApplication()).getExperimentVersion());
           //set the icon near the number
           titleView.setVerified(true, confidence_temp);
+          if (confidence_temp.equals(VerifyImage.CONFIDENT_STRING)) {
+            titleView.setPublicKey("example", true);
+          }
         }
       }
     }

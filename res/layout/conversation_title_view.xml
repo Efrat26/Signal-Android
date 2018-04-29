@@ -87,6 +87,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/verified_indicator"
             android:alpha="0.7"
+            android:textSize="11dp"
             android:visibility="gone"/>
         <org.thoughtcrime.securesms.components.emoji.EmojiTextView
                 android:id="@+id/subtitle"
