@@ -1418,6 +1418,8 @@
     <string name="dontKnow">I don\'t know</string>
     <!-- public key -->
     <string name="public_key">public key: </string>
+    <!--others-->
+    <string name="ok">OK</string>
     <!-- EOF -->
 
 </resources>

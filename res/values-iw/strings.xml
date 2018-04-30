@@ -1117,5 +1117,7 @@
   <string name="dontKnow">לא יודע/ת</string>
   <!-- public key -->
   <string name="public_key">מפתח ציבורי: </string>
+  <!--others-->
+  <string name="ok">אוקי</string>
   <!--EOF-->
 </resources>
