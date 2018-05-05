@@ -651,7 +651,7 @@
 
         <activity android:name=".VerifyImage" />
         <activity android:name=".webrtc.IsUserLegitimate" />
-        <activity android:name=".TrainingFeedback"></activity>
+        <activity android:name=".TrainingFeedback" />
     </application>
 
 </manifest>

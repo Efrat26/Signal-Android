@@ -1407,6 +1407,10 @@
     <!-- certification -->
     <string name="marked_safety">You have marked your safety number with </string>
     <string name="not_marked_safety">You haven\'t marked you safety number with </string>
+    <string name="marked_safety_no_number">You have marked your safety number with peer </string>
+    <string name="reminder_header_invite_title_modified">Mark Safety</string>
+    <string name="reminder_header_invite_text_modified">
+        Mark your safety with %1$s to the next level.</string>
 
     <!-- biu settings-->
     <string name="preference_file_key"></string>

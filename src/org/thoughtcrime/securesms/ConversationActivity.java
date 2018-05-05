@@ -790,26 +790,32 @@ private void handleConfidenceResult_caseDontKnow(String confidence){
   }
 
   private void handleInviteLink() {
-    try {
-      String inviteText;
 
-      boolean a = SecureRandom.getInstance("SHA1PRNG").nextBoolean();
-      if (a) inviteText = getString(R.string.ConversationActivity_lets_switch_to_signal, "https://sgnl.link/1LoIMUl");
-      else   inviteText = getString(R.string.ConversationActivity_lets_use_this_to_chat, "https://sgnl.link/1MF56H1");
+      try {
+        String inviteText = null;
+        if ((((ApplicationContext) this.getApplication()).getExperimentVersion() == 0)) {
+          boolean a = SecureRandom.getInstance("SHA1PRNG").nextBoolean();
+          if (a)
+            inviteText = getString(R.string.ConversationActivity_lets_switch_to_signal, "https://sgnl.link/1LoIMUl");
+          else
+            inviteText = getString(R.string.ConversationActivity_lets_use_this_to_chat, "https://sgnl.link/1MF56H1");
+        } else {
 
-      if (isDefaultSms) {
-        composeText.appendInvite(inviteText);
-      } else {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("smsto:" + recipient.getAddress().serialize()));
-        intent.putExtra("sms_body", inviteText);
-        intent.putExtra(Intent.EXTRA_TEXT, inviteText);
-        startActivity(intent);
+          inviteText = getString(R.string.marked_safety_no_number);
+        }
+        if (isDefaultSms) {
+          composeText.appendInvite(inviteText);
+        } else {
+          Intent intent = new Intent(Intent.ACTION_SENDTO);
+          intent.setData(Uri.parse("smsto:" + recipient.getAddress().serialize()));
+          intent.putExtra("sms_body", inviteText);
+          intent.putExtra(Intent.EXTRA_TEXT, inviteText);
+          startActivity(intent);
+        }
+      } catch (NoSuchAlgorithmException e) {
+        throw new AssertionError(e);
       }
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError(e);
     }
-  }
 
   private void handleResetSecureSession() {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1225,7 +1231,12 @@ private void handleConfidenceResult_caseDontKnow(String confidence){
                !seenInvite                                              &&
                !recipient.isGroupRecipient())
     {
-      InviteReminder reminder = new InviteReminder(this, recipient);
+      InviteReminder reminder;
+      if ((((ApplicationContext) this.getApplication()).getExperimentVersion() == 0)) {
+        reminder = new InviteReminder(this, recipient);
+      } else{
+        reminder = new InviteReminder(this, recipient,true);
+      }
       reminder.setOkListener(v -> {
         handleInviteLink();
         reminderView.get().requestDismiss();

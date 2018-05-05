@@ -1106,6 +1106,9 @@
   <!-- certification -->
   <string name="marked_safety">אישרת את הוודאות שלך עם </string>
   <string name="not_marked_safety">טרם אישרת את הוודאות שלך בנוגע ל:  </string>
+  <string name="marked_safety_no_number">אישרת את וודאותך עם העמית </string>
+  <string name="reminder_header_invite_title_modified">סמן וודאות</string>
+  <string name="reminder_header_invite_text_modified">קח את הבטיחות שלך עם %1$s לשלב הבא.</string>
 
   <!-- biu settings-->
   <string name ="preference_file_key"></string>
