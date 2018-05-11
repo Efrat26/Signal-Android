@@ -1424,6 +1424,7 @@
     <string name="public_key">public key: </string>
     <!--others-->
     <string name="ok">OK</string>
+    <string name="experiment_manager_phone">123456</string>
     <!-- EOF -->
 
 </resources>
