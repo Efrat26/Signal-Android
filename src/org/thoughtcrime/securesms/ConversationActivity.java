@@ -19,13 +19,11 @@ package org.thoughtcrime.securesms;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -46,7 +44,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -65,7 +62,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -163,7 +159,6 @@ import org.thoughtcrime.securesms.util.concurrent.AssertedSuccessListener;
 import org.thoughtcrime.securesms.util.concurrent.ListenableFuture;
 import org.thoughtcrime.securesms.util.concurrent.SettableFuture;
 import org.thoughtcrime.securesms.util.views.Stub;
-import org.thoughtcrime.securesms.webrtc.IsUserLegitimate;
 import org.whispersystems.libsignal.InvalidMessageException;
 import org.whispersystems.libsignal.util.guava.Optional;
 
@@ -174,7 +169,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static android.app.PendingIntent.getActivity;
 import static org.thoughtcrime.securesms.TransportOption.Type;
 import static org.thoughtcrime.securesms.database.GroupDatabase.GroupRecord;
 import static org.whispersystems.libsignal.SessionCipher.SESSION_LOCK;
@@ -197,7 +191,6 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
                InputPanel.Listener,
                InputPanel.MediaListener
 {
-  private String confidence, legitimateUser;
   private static final String TAG = ConversationActivity.class.getSimpleName();
 
   public static final String ADDRESS_EXTRA           = "address";
@@ -218,8 +211,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   private static final int PICK_LOCATION     = 8;
   private static final int PICK_GIF          = 9;
   private static final int SMS_DEFAULT       = 10;
-  private static final int CONFIDENCE       = 11;
-  private static final int LEGITIMATE       = 12;
+
   private   GlideRequests               glideRequests;
   protected ComposeText                 composeText;
   private   AnimatingToggle             buttonToggle;
@@ -268,12 +260,14 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   @Override
   protected void onCreate(Bundle state, boolean ready) {
     Log.w(TAG, "onCreate()");
+
     supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
-
-
+    Intent myIntent = new Intent(this,VerifyImage.class);
+    startActivity(myIntent);
+    setContentView(R.layout.activity_verify_image);
     setContentView(R.layout.conversation_activity);
 
-    TypedArray typedArray = obtainStyledAttributes(new int[]{R.attr.conversation_background});
+    TypedArray typedArray = obtainStyledAttributes(new int[] {R.attr.conversation_background});
     int color = typedArray.getColor(0, Color.WHITE);
     typedArray.recycle();
 
@@ -292,49 +286,6 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         initializeDraft();
       }
     });
-    //if it's the modified version
-    if ((((ApplicationContext) this.getApplication()).getExperimentVersion() != 0)) {
-      boolean alreadyAsked = false;
-      SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-      if (this.recipient != null) {
-        alreadyAsked = sharedPref.contains(this.recipient.getAddress().toString());
-      }
-      //if the user selected that she\he not confident - show the verifying image again
-      if (alreadyAsked) {
-        String confidence_temp = sharedPref.getString(this.recipient.getAddress().toString(), null);
-        if (confidence_temp != null && confidence_temp.equals(VerifyImage.NOT_CONFIDENT_STRING)) {
-          alreadyAsked = false;
-        }
-      }
-      //alreadyAsked = false;
-      //if not already asked - start the legitimate user activity
-      //send parameters of names (contact name if the peer is in contacts and profile name -
-      // the name in the application)
-      if (!alreadyAsked && this.legitimateUser == null) {
-        Intent legitimateUserIntent = new Intent(this, IsUserLegitimate.class);
-        if (this.recipient.getName() != null) {
-          legitimateUserIntent.putExtra("recipient name", this.recipient.getName().toString());
-        }
-        if (this.recipient.getProfileName() != null) {
-          legitimateUserIntent.putExtra("recipient profile name", this.recipient.getProfileName().toString());
-        }
-        startActivityForResult(legitimateUserIntent, LEGITIMATE);
-      }
-      //if already asked - set the verification sign according to the user's answer
-      if (alreadyAsked) {
-        String confidence_temp = sharedPref.getString(this.recipient.getAddress().toString(), null);
-        if (confidence_temp != null) {
-          //set the experiment version in case it didn't saved
-          titleView.setExperimentVersion(((ApplicationContext) this.getApplication()).getExperimentVersion());
-          //set the icon near the number
-          titleView.setVerified(true, confidence_temp);
-          if (confidence_temp.equals(VerifyImage.CONFIDENT_STRING)) {
-            titleView.setPublicKey("example", true);
-
-          }
-        }
-      }
-    }
   }
 
   @Override
@@ -392,6 +343,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     MessageNotifier.setVisibleThread(threadId);
     markThreadAsRead();
+
     Log.w(TAG, "onResume() Finished: " + (System.currentTimeMillis() - getIntent().getLongExtra(TIMING_EXTRA, 0)));
   }
 
@@ -437,128 +389,69 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
   @Override
   public void onActivityResult(final int reqCode, int resultCode, Intent data) {
+    Log.w(TAG, "onActivityResult called: " + reqCode + ", " + resultCode + " , " + data);
+    super.onActivityResult(reqCode, resultCode, data);
 
-      Log.w(TAG, "onActivityResult called: " + reqCode + ", " + resultCode + " , " + data);
-      super.onActivityResult(reqCode, resultCode, data);
-
-      if ((data == null && reqCode != TAKE_PHOTO && reqCode != SMS_DEFAULT) ||
-              (resultCode != RESULT_OK && reqCode != SMS_DEFAULT)) {
-        return;
-      }
-
-      switch (reqCode) {
-        case PICK_GALLERY:
-          MediaType mediaType;
-
-          String mimeType = MediaUtil.getMimeType(this, data.getData());
-
-          if (MediaUtil.isGif(mimeType)) mediaType = MediaType.GIF;
-          else if (MediaUtil.isVideo(mimeType)) mediaType = MediaType.VIDEO;
-          else mediaType = MediaType.IMAGE;
-
-          setMedia(data.getData(), mediaType);
-          break;
-        case PICK_DOCUMENT:
-          setMedia(data.getData(), MediaType.DOCUMENT);
-          break;
-        case PICK_AUDIO:
-          setMedia(data.getData(), MediaType.AUDIO);
-          break;
-        case PICK_CONTACT_INFO:
-          addAttachmentContactInfo(data.getData());
-          break;
-        case GROUP_EDIT:
-          recipient = Recipient.from(this, data.getParcelableExtra(GroupCreateActivity.GROUP_ADDRESS_EXTRA), true);
-          recipient.addListener(this);
-          titleView.setTitle(glideRequests, recipient);
-          setBlockedUserState(recipient, isSecureText, isDefaultSms);
-          supportInvalidateOptionsMenu();
-          break;
-        case TAKE_PHOTO:
-          if (attachmentManager.getCaptureUri() != null) {
-            setMedia(attachmentManager.getCaptureUri(), MediaType.IMAGE);
-          }
-          break;
-        case ADD_CONTACT:
-          recipient = Recipient.from(this, recipient.getAddress(), true);
-          recipient.addListener(this);
-          fragment.reloadList();
-          break;
-        case PICK_LOCATION:
-          SignalPlace place = new SignalPlace(PlacePicker.getPlace(data, this));
-          attachmentManager.setLocation(place, getCurrentMediaConstraints());
-          break;
-        case PICK_GIF:
-          setMedia(data.getData(), MediaType.GIF);
-          break;
-        case ScribbleActivity.SCRIBBLE_REQUEST_CODE:
-          setMedia(data.getData(), MediaType.IMAGE);
-          break;
-        case SMS_DEFAULT:
-          initializeSecurity(isSecureText, isDefaultSms);
-          break;
-        case CONFIDENCE:
-          if(((ApplicationContext) this.getApplication()).getExperimentVersion() != 0) {
-            if (resultCode == Activity.RESULT_OK) {
-              this.handleConfidenceResult_caseLegitimateOrFraud(data.getStringExtra("result"));
-            }
-          }
-          break;
-        case LEGITIMATE:
-          if(((ApplicationContext) this.getApplication()).getExperimentVersion() != 0) {
-            if (resultCode == Activity.RESULT_OK) {
-              this.legitimateUser = data.getStringExtra("result");
-              if ((!this.legitimateUser.equals(IsUserLegitimate.DONT_KNOW_STRING))) {
-                Intent myIntent = new Intent(this, VerifyImage.class);
-                myIntent.putExtra("legitimate", this.legitimateUser);
-                startActivityForResult(myIntent, CONFIDENCE);
-                // else - if the user answered she\he doesn't know if it's a fraud or legitimate
-                //treat confidence as not sure case
-              } else{
-                this.handleConfidenceResult_caseDontKnow(VerifyImage.NOT_SURE_CONFIDENT_STRING);
-              }
-            }
-          }
-          break;
-      }
-      //}
+    if ((data == null && reqCode != TAKE_PHOTO && reqCode != SMS_DEFAULT) ||
+        (resultCode != RESULT_OK && reqCode != SMS_DEFAULT))
+    {
+      return;
     }
-private void handleConfidenceResult_caseLegitimateOrFraud(String confidence){
-  this.confidence = confidence;
-  titleView.setExperimentVersion(((ApplicationContext)this.getApplication()).getExperimentVersion());
-  titleView.setImageResource(this.confidence);
-  titleView.setVerified(true, this.confidence);
-  SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-  SharedPreferences.Editor editor = sharedPref.edit();
-  if (!this.confidence.equals(VerifyImage.NOT_CONFIDENT_STRING)
-          && !this.legitimateUser.equals(IsUserLegitimate.FRAUD_STRING)) {
-    editor.putBoolean(this.recipient.getAddress().toString(), true);
-  } else{
-    editor.putBoolean(this.recipient.getAddress().toString(), false);
+
+    switch (reqCode) {
+    case PICK_GALLERY:
+      MediaType mediaType;
+
+      String mimeType = MediaUtil.getMimeType(this, data.getData());
+
+      if      (MediaUtil.isGif(mimeType))   mediaType = MediaType.GIF;
+      else if (MediaUtil.isVideo(mimeType)) mediaType = MediaType.VIDEO;
+      else                                  mediaType = MediaType.IMAGE;
+
+      setMedia(data.getData(), mediaType);
+      break;
+    case PICK_DOCUMENT:
+      setMedia(data.getData(), MediaType.DOCUMENT);
+      break;
+    case PICK_AUDIO:
+      setMedia(data.getData(), MediaType.AUDIO);
+      break;
+    case PICK_CONTACT_INFO:
+      addAttachmentContactInfo(data.getData());
+      break;
+    case GROUP_EDIT:
+      recipient = Recipient.from(this, data.getParcelableExtra(GroupCreateActivity.GROUP_ADDRESS_EXTRA), true);
+      recipient.addListener(this);
+      titleView.setTitle(glideRequests, recipient);
+      setBlockedUserState(recipient, isSecureText, isDefaultSms);
+      supportInvalidateOptionsMenu();
+      break;
+    case TAKE_PHOTO:
+      if (attachmentManager.getCaptureUri() != null) {
+        setMedia(attachmentManager.getCaptureUri(), MediaType.IMAGE);
+      }
+      break;
+    case ADD_CONTACT:
+      recipient = Recipient.from(this, recipient.getAddress(), true);
+      recipient.addListener(this);
+      fragment.reloadList();
+      break;
+    case PICK_LOCATION:
+      SignalPlace place = new SignalPlace(PlacePicker.getPlace(data, this));
+      attachmentManager.setLocation(place, getCurrentMediaConstraints());
+      break;
+    case PICK_GIF:
+      setMedia(data.getData(), MediaType.GIF);
+      break;
+    case ScribbleActivity.SCRIBBLE_REQUEST_CODE:
+      setMedia(data.getData(), MediaType.IMAGE);
+      break;
+    case SMS_DEFAULT:
+      initializeSecurity(isSecureText, isDefaultSms);
+      break;
+    }
   }
-  editor.commit();
-  editor.putString(this.recipient.getAddress().toString(), this.confidence);
-  editor.commit();
-  if (this.confidence.equals(VerifyImage.NOT_CONFIDENT_STRING)
-          && this.legitimateUser.equals(IsUserLegitimate.FRAUD_STRING)) {
-    finish();
-  } else if(this.confidence.equals(VerifyImage.CONFIDENT_STRING)
-          && this.legitimateUser.equals(IsUserLegitimate.LEGITIMATE_STRING)){
-    this.titleView.setPublicKey("example", true);
-  }
-}
-private void handleConfidenceResult_caseDontKnow(String confidence){
-  this.confidence = confidence;
-  titleView.setExperimentVersion(((ApplicationContext)this.getApplication()).getExperimentVersion());
-  titleView.setImageResource(this.confidence);
-  titleView.setVerified(true, this.confidence);
-  SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-  SharedPreferences.Editor editor = sharedPref.edit();
-  editor.putBoolean(this.recipient.getAddress().toString(),true );
-  editor.commit();
-  editor.putString(this.recipient.getAddress().toString(), this.confidence);
-  editor.commit();
-}
+
   @Override
   public void startActivity(Intent intent) {
     if (intent.getStringExtra(Browser.EXTRA_APPLICATION_ID) != null) {
@@ -790,32 +683,26 @@ private void handleConfidenceResult_caseDontKnow(String confidence){
   }
 
   private void handleInviteLink() {
+    try {
+      String inviteText;
 
-      try {
-        String inviteText = null;
-        if ((((ApplicationContext) this.getApplication()).getExperimentVersion() == 0)) {
-          boolean a = SecureRandom.getInstance("SHA1PRNG").nextBoolean();
-          if (a)
-            inviteText = getString(R.string.ConversationActivity_lets_switch_to_signal, "https://sgnl.link/1LoIMUl");
-          else
-            inviteText = getString(R.string.ConversationActivity_lets_use_this_to_chat, "https://sgnl.link/1MF56H1");
-        } else {
+      boolean a = SecureRandom.getInstance("SHA1PRNG").nextBoolean();
+      if (a) inviteText = getString(R.string.ConversationActivity_lets_switch_to_signal, "https://sgnl.link/1LoIMUl");
+      else   inviteText = getString(R.string.ConversationActivity_lets_use_this_to_chat, "https://sgnl.link/1MF56H1");
 
-          inviteText = getString(R.string.marked_safety_no_number);
-        }
-        if (isDefaultSms) {
-          composeText.appendInvite(inviteText);
-        } else {
-          Intent intent = new Intent(Intent.ACTION_SENDTO);
-          intent.setData(Uri.parse("smsto:" + recipient.getAddress().serialize()));
-          intent.putExtra("sms_body", inviteText);
-          intent.putExtra(Intent.EXTRA_TEXT, inviteText);
-          startActivity(intent);
-        }
-      } catch (NoSuchAlgorithmException e) {
-        throw new AssertionError(e);
+      if (isDefaultSms) {
+        composeText.appendInvite(inviteText);
+      } else {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("smsto:" + recipient.getAddress().serialize()));
+        intent.putExtra("sms_body", inviteText);
+        intent.putExtra(Intent.EXTRA_TEXT, inviteText);
+        startActivity(intent);
       }
+    } catch (NoSuchAlgorithmException e) {
+      throw new AssertionError(e);
     }
+  }
 
   private void handleResetSecureSession() {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1231,12 +1118,7 @@ private void handleConfidenceResult_caseDontKnow(String confidence){
                !seenInvite                                              &&
                !recipient.isGroupRecipient())
     {
-      InviteReminder reminder;
-      if ((((ApplicationContext) this.getApplication()).getExperimentVersion() == 0)) {
-        reminder = new InviteReminder(this, recipient);
-      } else{
-        reminder = new InviteReminder(this, recipient,true);
-      }
+      InviteReminder reminder = new InviteReminder(this, recipient);
       reminder.setOkListener(v -> {
         handleInviteLink();
         reminderView.get().requestDismiss();
@@ -1312,7 +1194,7 @@ private void handleConfidenceResult_caseDontKnow(String confidence){
           unverifiedBannerView.get().hide();
         }
 
-        titleView.setVerified(isSecureText && identityRecords.isVerified(), null);
+        titleView.setVerified(isSecureText && identityRecords.isVerified());
 
         future.set(true);
       }
@@ -1445,7 +1327,7 @@ private void handleConfidenceResult_caseDontKnow(String confidence){
     Util.runOnMain(() -> {
       Log.w(TAG, "onModifiedRun(): " + recipient.getRegistered());
       titleView.setTitle(glideRequests, recipient);
-      titleView.setVerified(identityRecords.isVerified(), null);
+      titleView.setVerified(identityRecords.isVerified());
       setBlockedUserState(recipient, isSecureText, isDefaultSms);
       setActionBarColor(recipient.getColor());
       setGroupShareProfileReminder(recipient);

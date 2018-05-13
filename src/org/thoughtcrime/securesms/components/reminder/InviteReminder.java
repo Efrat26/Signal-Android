@@ -15,28 +15,8 @@ public class InviteReminder extends Reminder {
   public InviteReminder(final @NonNull Context context,
                         final @NonNull Recipient recipient)
   {
-
     super(context.getString(R.string.reminder_header_invite_title),
           context.getString(R.string.reminder_header_invite_text, recipient.toShortString()));
-
-    setDismissListener(new OnClickListener() {
-      @Override public void onClick(View v) {
-        new AsyncTask<Void,Void,Void>() {
-
-          @Override protected Void doInBackground(Void... params) {
-            DatabaseFactory.getRecipientDatabase(context).setSeenInviteReminder(recipient, true);
-            return null;
-          }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-      }
-    });
-  }
-  public InviteReminder(final @NonNull Context context,
-                        final @NonNull Recipient recipient, boolean newVersion)
-  {
-
-    super(context.getString(R.string.reminder_header_invite_title_modified),
-            context.getString(R.string.reminder_header_invite_text_modified, recipient.toShortString()));
 
     setDismissListener(new OnClickListener() {
       @Override public void onClick(View v) {
