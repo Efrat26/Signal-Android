@@ -22,17 +22,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/textView_userLegitimate"
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:lineSpacingMultiplier="1.3"
             android:layout_marginStart="20dp"
-            android:textSize="15sp"
-            android:text="tuyutyutyu"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="45dp" />
+            android:textSize="15sp"/>
 
 
         <ImageView
