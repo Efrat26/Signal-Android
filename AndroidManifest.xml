@@ -652,6 +652,7 @@
         <activity android:name=".VerifyImage" />
         <activity android:name=".webrtc.IsUserLegitimate" />
         <activity android:name=".TrainingFeedback" />
+        <activity android:name=".biu.HiddenContact.ExperimentManager"></activity>
     </application>
 
 </manifest>
