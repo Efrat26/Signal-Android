@@ -297,5 +297,10 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-
+    <string-array name="commandsArray">
+        <item>Add User To Experiment</item>
+        <item>Remove User From Experiment</item>
+        <item>Send Command</item>
+        <item>Show Statistics</item>
+    </string-array>
 </resources>

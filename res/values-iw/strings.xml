@@ -1122,5 +1122,6 @@
   <string name="public_key">מפתח ציבורי: </string>
   <!--others-->
   <string name="ok">אוקי</string>
+  <string name="manage_experiment">נהל ניסוי</string>
   <!--EOF-->
 </resources>

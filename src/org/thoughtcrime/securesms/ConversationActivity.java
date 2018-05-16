@@ -77,6 +77,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.thoughtcrime.securesms.audio.AudioRecorder;
 import org.thoughtcrime.securesms.audio.AudioSlidePlayer;
+import org.thoughtcrime.securesms.biu.HiddenContact.ExperimentManager;
 import org.thoughtcrime.securesms.color.MaterialColor;
 import org.thoughtcrime.securesms.components.AnimatingToggle;
 import org.thoughtcrime.securesms.components.AttachmentTypeSelector;
@@ -269,8 +270,6 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   protected void onCreate(Bundle state, boolean ready) {
     Log.w(TAG, "onCreate()");
     supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_BAR_OVERLAY);
-
-
     setContentView(R.layout.conversation_activity);
 
     TypedArray typedArray = obtainStyledAttributes(new int[]{R.attr.conversation_background});

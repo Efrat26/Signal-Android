@@ -18,36 +18,11 @@
         android:gravity="center"
         android:layout_centerHorizontal="true"
     />
-    <LinearLayout
+    <ListView
+        android:id="@+id/commands_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/separator_padding"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
         android:layout_below="@id/textView_manager">
+    </ListView>
 
-        <Button
-            android:id="@+id/manager_send"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/signal_primary"
-            android:padding="10dp"
-            android:textColor="@color/white"
-            android:text="@string/send_command"/>
-
-        <Button
-            android:id="@+id/manager_stat"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/signal_primary"
-            android:padding="10dp"
-            android:textColor="@color/white"
-            android:text="@string/stat"/>
-    </LinearLayout>
 </RelativeLayout>

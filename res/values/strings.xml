@@ -1428,6 +1428,7 @@
     <string name="experiment_name">Usability Experiment</string>
     <string name="send_command">Send Command</string>
     <string name="stat">Show Statistics</string>
+    <string name="manage_experiment">Manage Experiment</string>
     <!-- EOF -->
 
 </resources>
