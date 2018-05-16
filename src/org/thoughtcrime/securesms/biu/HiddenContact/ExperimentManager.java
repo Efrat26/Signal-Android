@@ -2,6 +2,9 @@ package org.thoughtcrime.securesms.biu.HiddenContact;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -20,5 +23,20 @@ public class ExperimentManager extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.commandsArray));
          listView = (ListView) findViewById(R.id.commands_list);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch(position){
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                }
+                // When clicked perform some action...
+            }
+        });
     }
+
 }
