@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.thoughtcrime.securesms.biu.HiddenContact.ExperimentManager;
 import org.thoughtcrime.securesms.components.RatingManager;
 import org.thoughtcrime.securesms.components.SearchToolbar;
 import org.thoughtcrime.securesms.database.DatabaseFactory;
@@ -149,6 +150,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     case R.id.menu_import_export:     handleImportExport();    return true;
     case R.id.menu_invite:            handleInvite();          return true;
     case R.id.menu_help:              handleHelp();            return true;
+    case R.id.manage_experiment_option: handleManageExperiment(); return true;
     }
 
     return false;
@@ -218,6 +220,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
   private void handleInvite() {
     startActivity(new Intent(this, InviteActivity.class));
   }
+  private void handleManageExperiment(){startActivity(new Intent(this, ExperimentManager.class));}
 
   private void handleHelp() {
     try {
