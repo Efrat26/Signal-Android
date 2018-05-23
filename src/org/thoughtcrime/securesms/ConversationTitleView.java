@@ -33,14 +33,19 @@ public class ConversationTitleView extends RelativeLayout {
   private AvatarImageView avatar;
   private TextView        title;
   private TextView        subtitle;
-  private ImageView       verified;
+  private ImageView       verifiedIndicator;
+  //private ImageView       not_verified;
+ // private ImageView       not_sure_verified;
+  private String levelOfConfidence;
+  private TextView publicKey;
+  private int experimentVersion;//0 is the original version
 
   public ConversationTitleView(Context context) {
-    this(context, null);
+    this(context, null); this.experimentVersion = 0;
   }
 
   public ConversationTitleView(Context context, AttributeSet attrs) {
-    super(context, attrs);
+    super(context, attrs);this.experimentVersion = 0;
 
   }
 
@@ -52,9 +57,11 @@ public class ConversationTitleView extends RelativeLayout {
     this.content  = ViewUtil.findById(this, R.id.content);
     this.title    = ViewUtil.findById(this, R.id.title);
     this.subtitle = ViewUtil.findById(this, R.id.subtitle);
-    this.verified = ViewUtil.findById(this, R.id.verified_indicator);
+    this.verifiedIndicator = ViewUtil.findById(this, R.id.verified_indicator);
+    //this.not_verified = ViewUtil.findById(this, R.id.not_verified_indicator);
+    //this.not_sure_verified = ViewUtil.findById(this, R.id.not_sure_verified_indicator);
     this.avatar   = ViewUtil.findById(this, R.id.contact_photo_image);
-
+    this.publicKey = ViewUtil.findById(this, R.id.public_key);
     ViewUtil.setTextViewGravityStart(this.title, getContext());
     ViewUtil.setTextViewGravityStart(this.subtitle, getContext());
   }
@@ -76,8 +83,50 @@ public class ConversationTitleView extends RelativeLayout {
     }
   }
 
-  public void setVerified(boolean verified) {
-    this.verified.setVisibility(verified ? View.VISIBLE : View.GONE);
+  public void setVerified(boolean verified, String levelOfConfidence) {
+    if (levelOfConfidence!= null){
+      this.levelOfConfidence = levelOfConfidence;
+    }
+    if (this.experimentVersion != 0){
+      switch (this.levelOfConfidence){
+        case VerifyImage.CONFIDENT_STRING:
+          this.verifiedIndicator.setVisibility(View.VISIBLE);
+          break;
+        case VerifyImage.NOT_CONFIDENT_STRING:
+          this.verifiedIndicator.setVisibility(View.VISIBLE);
+          break;
+
+        case VerifyImage.NOT_SURE_CONFIDENT_STRING:
+          this.verifiedIndicator.setVisibility(View.VISIBLE);
+          break;
+      }
+    }
+    else {
+      this.verifiedIndicator.setVisibility(verified ? View.VISIBLE : View.GONE);
+    }
+  }
+  public void setPublicKey(String key, boolean shouldBeVisible){
+    String temp = getResources().getString(R.string.public_key) +key;
+    this.publicKey.setText(temp);
+
+    this.publicKey.setVisibility(shouldBeVisible ? View.VISIBLE : View.GONE);
+  }
+  public void setImageResource(String confidence ) {
+    if (confidence != null) {
+      this.levelOfConfidence=confidence;
+      switch (this.levelOfConfidence) {
+        case VerifyImage.CONFIDENT_STRING:
+          this.verifiedIndicator.setImageResource(R.drawable.ic_check_circle_white_18dp);
+          break;
+        case VerifyImage.NOT_CONFIDENT_STRING:
+          this.verifiedIndicator.setImageResource(R.drawable.ic_error_red_18dp);
+          break;
+
+        case VerifyImage.NOT_SURE_CONFIDENT_STRING:
+          this.verifiedIndicator.setImageResource(R.drawable.ic_pan_tool_black_18dp);
+          break;
+      }
+    }
   }
 
   @Override
@@ -140,5 +189,8 @@ public class ConversationTitleView extends RelativeLayout {
     else                                    this.subtitle.setText(recipient.getAddress().serialize());
 
     this.subtitle.setVisibility(View.VISIBLE);
+  }
+  public void setExperimentVersion(int version){
+    this.experimentVersion = version;
   }
 }
