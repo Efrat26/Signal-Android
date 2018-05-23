@@ -18,19 +18,25 @@ package org.thoughtcrime.securesms;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.thoughtcrime.securesms.biu.HiddenContact.ExperimentManager;
 import org.thoughtcrime.securesms.components.RatingManager;
 import org.thoughtcrime.securesms.components.SearchToolbar;
 import org.thoughtcrime.securesms.database.DatabaseFactory;
@@ -53,7 +59,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
 {
   @SuppressWarnings("unused")
   private static final String TAG = ConversationListActivity.class.getSimpleName();
-
+  private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
   private final DynamicTheme    dynamicTheme    = new DynamicNoActionBarTheme();
   private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
@@ -77,11 +83,11 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     searchToolbar = findViewById(R.id.search_toolbar);
     searchAction  = findViewById(R.id.search_action);
     fragment      = initFragment(R.id.fragment_container, new ConversationListFragment(), dynamicLanguage.getCurrentLocale());
-
     initializeSearchListener();
 
     RatingManager.showRatingDialogIfNecessary(this);
     RegistrationLockDialog.showReminderIfNecessary(this);
+
   }
 
   @Override
@@ -149,6 +155,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     case R.id.menu_import_export:     handleImportExport();    return true;
     case R.id.menu_invite:            handleInvite();          return true;
     case R.id.menu_help:              handleHelp();            return true;
+    case R.id.manage_experiment_option: handleManageExperiment(); return true;
     }
 
     return false;
@@ -218,12 +225,66 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
   private void handleInvite() {
     startActivity(new Intent(this, InviteActivity.class));
   }
+  private void handleManageExperiment(){
 
+    boolean permission = this.CheckPermissionForReadingPhoneState();
+    if(permission) {
+      startActivity(new Intent(this, ExperimentManager.class));
+    }
+  }
+  @TargetApi(Build.VERSION_CODES.M)
+  private boolean CheckPermissionForReadingPhoneState(){
+    boolean result= false;
+    if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+            != PackageManager.PERMISSION_GRANTED) {
+      requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
+              MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+      // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+      // app-defined int constant
+
+      //return;
+    } else{
+       result = CheckIfUserIsManager();
+
+    }
+    return result;
+  }
+  private boolean CheckIfUserIsManager(){
+    TelephonyManager tMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+    String mPhoneNumber = tMgr.getLine1Number();
+    if(mPhoneNumber.equals(R.string.experiment_manager_phone)){
+      return true;
+    } else{
+      return false;
+    }
+  }
   private void handleHelp() {
     try {
       startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://support.whispersystems.org")));
     } catch (ActivityNotFoundException e) {
       Toast.makeText(this, R.string.ConversationListActivity_there_is_no_browser_installed_on_your_device, Toast.LENGTH_LONG).show();
+    }
+  }
+  public void onRequestPermissionsResult(int requestCode,
+                                         String permissions[], int[] grantResults) {
+    switch (requestCode) {
+      case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+          // permission was granted, yay! do the
+          // calendar task you need to do.
+
+        } else {
+
+          // permission denied, boo! Disable the
+          // functionality that depends on this permission.
+        }
+        return;
+      }
+
+      // other 'switch' lines to check for other
+      // permissions this app might request
     }
   }
 }

@@ -297,5 +297,10 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-
+    <string-array name="commandsArray">
+        <item>@string/add_user</item>
+        <item>@string/remove_user</item>
+        <item>@string/send_command</item>
+        <item>@string/stat</item>
+    </string-array>
 </resources>

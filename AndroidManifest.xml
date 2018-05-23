@@ -9,6 +9,7 @@
         android:name="org.thoughtcrime.securesms.ACCESS_SECRETS"
         android:label="Access to TextSecure Secrets"
         android:protectionLevel="signature" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -652,6 +653,7 @@
         <activity android:name=".VerifyImage" android:theme="@style/TextSecure.LightNoActionBar"></activity>
         <activity android:name=".webrtc.IsUserLegitimate" />
         <activity android:name=".TrainingFeedback" />
+        <activity android:name=".biu.HiddenContact.ExperimentManager"></activity>
     </application>
 
 </manifest>
