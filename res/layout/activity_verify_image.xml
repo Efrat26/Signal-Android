@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/signal_primary"
+    android:padding="10dp"
     tools:context="org.thoughtcrime.securesms.webrtc.IsUserLegitimate">
 
 
@@ -11,11 +13,21 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="20dp"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:padding="20dp"
         android:text="@string/how_confident"
+        android:textColor="@color/white"
         android:textSize="24sp"
-        android:gravity="center" />
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <ImageView
@@ -23,74 +35,67 @@
         android:layout_width="200dip"
         android:layout_height="200dip"
         android:layout_centerInParent="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:adjustViewBounds="false"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_contact_picture"
+        android:src="@drawable/avatar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/separator_padding"
         android:layout_alignParentBottom="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="323dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <Button
             android:id="@+id/verifyImageYes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:background="@color/signal_primary"
-            android:padding="10dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="200dp"
-            android:layout_margin="10dp"
+            android:drawableLeft="@drawable/ic_message_black_18dp"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_message_black_18dp"
             android:text="@string/yes"
-            android:theme="@style/InfoButton" />
+            tools:ignore="ButtonStyle" />
 
 
         <Button
             android:id="@+id/verifyImageNotSure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@color/signal_primary"
-            android:padding="10dp"
-            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:paddingLeft="200dp"
-            android:paddingRight="15dp"
+            android:drawableLeft="@drawable/ic_message_black_18dp"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_message_black_18dp"
             android:text="@string/not_sure"
-            android:textColor="@color/white"
-            tools:layout_editor_absoluteX="270dp"
-            tools:layout_editor_absoluteY="386dp" />
+            tools:ignore="ButtonStyle" />
 
 
         <Button
             android:id="@+id/verifyImageNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@color/signal_primary"
-            android:padding="10dp"
-            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:paddingLeft="200dp"
-            android:paddingRight="200dp"
+            android:drawableLeft="@drawable/ic_message_black_18dp"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_message_black_18dp"
             android:text="@string/no"
-            android:textColor="@color/white"
-            tools:layout_editor_absoluteX="148dp"
-            tools:layout_editor_absoluteY="386dp" />
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
