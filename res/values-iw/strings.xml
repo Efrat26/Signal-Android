@@ -1130,5 +1130,7 @@
   <string name="remove_user">הסרת משתמש מהניסוי</string>
   <string name="send_command">שליחת פקודה</string>
   <string name="stat">הצג סטטיסטיקה</string>
+  <string name="simulate_attack">סמלץ מתקפה</string>
+  <string name="getLog">קבל לוג</string>
   <!--EOF-->
 </resources>

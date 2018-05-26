@@ -40,6 +40,7 @@ public class ConversationTitleView extends RelativeLayout {
   private TextView publicKey;
   private int experimentVersion;//0 is the original version
 
+
   public ConversationTitleView(Context context) {
     this(context, null); this.experimentVersion = 0;
   }

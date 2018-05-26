@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v13.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.view.Menu;
@@ -240,6 +241,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
       requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
               MY_PERMISSIONS_REQUEST_READ_CONTACTS);
 
+
       // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
       // app-defined int constant
 
@@ -253,11 +255,15 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
   private boolean CheckIfUserIsManager(){
     TelephonyManager tMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
     String mPhoneNumber = tMgr.getLine1Number();
-    if(mPhoneNumber.equals(R.string.experiment_manager_phone)){
+    //for now return always true (for checking, later comment this line)
+    return true;
+    /*
+  if(mPhoneNumber.equals(R.string.experiment_manager_phone)){
       return true;
-    } else{
-      return false;
-    }
+   } else{
+     return false;
+  }
+  */
   }
   private void handleHelp() {
     try {
@@ -276,7 +282,9 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
           // calendar task you need to do.
 
         } else {
-
+          ActivityCompat.requestPermissions(this,
+                  new String[]{Manifest.permission.READ_PHONE_STATE},
+                  MY_PERMISSIONS_REQUEST_READ_CONTACTS);
           // permission denied, boo! Disable the
           // functionality that depends on this permission.
         }

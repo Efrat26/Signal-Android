@@ -297,10 +297,14 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-    <string-array name="commandsArray">
+    <string-array name="optionsArray">
         <item>@string/add_user</item>
         <item>@string/remove_user</item>
         <item>@string/send_command</item>
         <item>@string/stat</item>
+    </string-array>
+    <string-array name="commandsArray">
+        <item>@string/simulate_attack</item>
+        <item>@string/getLog</item>
     </string-array>
 </resources>
