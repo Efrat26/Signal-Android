@@ -14,6 +14,7 @@ import org.thoughtcrime.securesms.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ExperimentManager extends AppCompatActivity {
@@ -21,13 +22,15 @@ public class ExperimentManager extends AppCompatActivity {
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
-    HashMap<String, List<String>> expandableListDetail;
+    LinkedHashMap<String, List<String>> expandableListDetail;
+    ExpandableListDataPump dataPump;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment_manager);
         expandableListView = (ExpandableListView) findViewById(R.id.options_list);
-        expandableListDetail = ExpandableListDataPump.getData();
+        this.dataPump = new ExpandableListDataPump(this);
+        expandableListDetail = dataPump.getData();
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
         expandableListAdapter = new ExpandableListViewAdapter(this, expandableListTitle, expandableListDetail);
         expandableListView.setAdapter(expandableListAdapter);
