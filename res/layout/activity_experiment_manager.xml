@@ -14,8 +14,9 @@
         android:padding="25dp"
         android:layout_alignParentTop="true"
         android:text="@string/experiment_name"
-        android:textSize="24sp"
+        android:textSize="25dp"
         android:gravity="center"
+        android:textColor="@color/purple"
         android:layout_centerHorizontal="true"
     />
     <ExpandableListView

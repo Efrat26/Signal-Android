@@ -29,19 +29,14 @@ public class ExpandableListDataPump {
         LinkedHashMap<String, List<String>> expandableListDetail = new LinkedHashMap<String, List<String>>();
         this.commands = this.context.getResources().getStringArray(R.array.commandsArray);
         this.commandsAsList = Arrays.asList(this.commands);
-        List<String> cricket = new ArrayList<String>();
-        cricket.add("India");
-        cricket.add("Pakistan");
-        cricket.add("Australia");
-        cricket.add("England");
-        cricket.add("South Africa");
+        List<String> dataList = new ArrayList<String>();
         String send_Command = this.context.getResources().getString(R.string.send_command);
         array = this.context.getResources().getStringArray(R.array.optionsArray);
         for(int i=0;i<array.length;i++){
             if(array[i].equals((send_Command))){
                 expandableListDetail.put(array[i], this.commandsAsList);
             } else {
-                expandableListDetail.put(array[i], cricket);
+                expandableListDetail.put(array[i], dataList);
             }
         }
         return expandableListDetail;

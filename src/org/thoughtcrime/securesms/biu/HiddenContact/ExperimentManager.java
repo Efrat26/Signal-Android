@@ -1,19 +1,16 @@
 package org.thoughtcrime.securesms.biu.HiddenContact;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import org.thoughtcrime.securesms.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -24,6 +21,7 @@ public class ExperimentManager extends AppCompatActivity {
     List<String> expandableListTitle;
     LinkedHashMap<String, List<String>> expandableListDetail;
     ExpandableListDataPump dataPump;
+    Intent myIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +32,7 @@ public class ExperimentManager extends AppCompatActivity {
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
         expandableListAdapter = new ExpandableListViewAdapter(this, expandableListTitle, expandableListDetail);
         expandableListView.setAdapter(expandableListAdapter);
+        this.myIntent =  new Intent(getBaseContext(), SimulateAttackCommand.class);
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override
@@ -67,6 +66,10 @@ public class ExperimentManager extends AppCompatActivity {
                                 expandableListTitle.get(groupPosition)).get(
                                 childPosition), Toast.LENGTH_SHORT
                 ).show();
+                if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.simulate_attack))){
+
+                    startActivity(myIntent);
+                }
                 return false;
             }
         });
