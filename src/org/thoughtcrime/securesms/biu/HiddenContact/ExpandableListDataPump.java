@@ -22,13 +22,18 @@ public class ExpandableListDataPump {
     Context context;
     String[] commands;
     List<String> commandsAsList;
+    String[] stats;
+    List<String> statsAsList;
     public ExpandableListDataPump(Context c){
         this.context = c;
     }
     public LinkedHashMap<String, List<String>> getData() {
         LinkedHashMap<String, List<String>> expandableListDetail = new LinkedHashMap<String, List<String>>();
         this.commands = this.context.getResources().getStringArray(R.array.commandsArray);
+        this.stats = this.context.getResources().getStringArray(R.array.statsArray);
         this.commandsAsList = Arrays.asList(this.commands);
+        this.statsAsList = Arrays.asList(this.stats);
+        //this.commandsAsList.addAll(this.statsAsList);
         List<String> dataList = new ArrayList<String>();
         String send_Command = this.context.getResources().getString(R.string.send_command);
         array = this.context.getResources().getStringArray(R.array.optionsArray);

@@ -307,4 +307,7 @@
         <item>@string/simulate_attack</item>
         <item>@string/getLog</item>
     </string-array>
+    <string-array name="statsArray">
+        <item>@string/get_stat_for_user</item>
+    </string-array>
 </resources>

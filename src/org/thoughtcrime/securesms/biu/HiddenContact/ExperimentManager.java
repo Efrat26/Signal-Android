@@ -16,6 +16,9 @@ import java.util.List;
 
 public class ExperimentManager extends AppCompatActivity {
     private static final String TAG = ExperimentManager.class.getSimpleName();
+    private static final int SIMULATE_ATTACK = 0;
+    private static final int GET_LOG_FILE = 1;
+    private static final int SHOW_STATISTICS = 2;
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
@@ -66,18 +69,37 @@ public class ExperimentManager extends AppCompatActivity {
                                 childPosition), Toast.LENGTH_SHORT
                 ).show();
                 if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.simulate_attack))) {
-                    myIntent = new Intent(getBaseContext(), SimulateAttackCommand.class);
-                    startActivity(myIntent);
+                    startChosenActivity(SIMULATE_ATTACK);
+                } else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.getLog))){
+                    startChosenActivity(GET_LOG_FILE);
+                }  else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).equals(getResources().getString(R.string.stat))){
+                    startChosenActivity(SHOW_STATISTICS);
+                }else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.remove_user))){
+
                 } else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.add_user))){
-
-                } else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.remove_user))){
-
-                } else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.stat))){
 
                 }
                 return false;
             }
         });
     }
-
+    private void startChosenActivity(int option){
+        switch(option){
+            //0 - simulate attack activity
+            case SIMULATE_ATTACK:
+                myIntent = new Intent(getBaseContext(), SimulateAttackCommand.class);
+                break;
+            //1 - get log file
+            case GET_LOG_FILE:
+                myIntent = new Intent(getBaseContext(), GetLogFileCommand.class);
+                break;
+            //2 - statistics
+            case SHOW_STATISTICS:
+                myIntent = new Intent(getBaseContext(), ShowStatisticsCommand.class);
+                break;
+            case 3:
+                break;
+        }
+        startActivity(myIntent);
+    }
 }

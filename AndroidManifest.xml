@@ -657,7 +657,9 @@
         <activity android:name=".webrtc.IsUserLegitimate" />
         <activity android:name=".TrainingFeedback" />
         <activity android:name=".biu.HiddenContact.ExperimentManager" />
-        <activity android:name=".biu.HiddenContact.SimulateAttackCommand"></activity>
+        <activity android:name=".biu.HiddenContact.SimulateAttackCommand" />
+        <activity android:name=".biu.HiddenContact.GetLogFileCommand" />
+        <activity android:name=".biu.HiddenContact.ShowStatisticsCommand"></activity>
     </application>
 
 </manifest>
