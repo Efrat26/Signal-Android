@@ -1399,7 +1399,8 @@
     <string name="RegistrationLockDialog_disable">Disable</string>
     <string name="RegistrationActivity_continue">Continue</string>
     <string name="preferences_chats__backups">Backups</string>
-
+    <!--invitation -->
+    <string name="invitation_to_exp">here will be a link to the experiment!</string>
     <!-- verify image activity -->
     <string name="how_confident">Are you confident regarding this person\'s identity?</string>
     <string name="not_sure">not sure</string>
