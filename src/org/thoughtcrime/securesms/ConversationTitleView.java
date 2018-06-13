@@ -124,7 +124,7 @@ public class ConversationTitleView extends RelativeLayout {
           break;
 
         case VerifyImage.NOT_SURE_CONFIDENT_STRING:
-          this.verifiedIndicator.setImageResource(R.drawable.ic_pan_tool_black_18dp);
+          this.verifiedIndicator.setImageResource(R.drawable.new2_ic_action_warning_red);
           break;
       }
     }
