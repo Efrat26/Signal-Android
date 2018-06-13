@@ -117,7 +117,7 @@ public class ConversationTitleView extends RelativeLayout {
       this.levelOfConfidence=confidence;
       switch (this.levelOfConfidence) {
         case VerifyImage.CONFIDENT_STRING:
-          this.verifiedIndicator.setImageResource(R.drawable.ic_check_circle_white_18dp);
+          this.verifiedIndicator.setImageResource(R.drawable.new2_ic_check_circle_white_18dp);
           break;
         case VerifyImage.NOT_CONFIDENT_STRING:
           this.verifiedIndicator.setImageResource(R.drawable.ic_error_red_18dp);
