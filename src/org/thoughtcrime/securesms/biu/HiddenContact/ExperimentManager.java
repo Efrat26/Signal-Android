@@ -1,14 +1,19 @@
 package org.thoughtcrime.securesms.biu.HiddenContact;
 
+import android.app.Application;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.R;
+import org.thoughtcrime.securesms.database.DatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,6 +24,8 @@ public class ExperimentManager extends AppCompatActivity {
     private static final int SIMULATE_ATTACK = 0;
     private static final int GET_LOG_FILE = 1;
     private static final int SHOW_STATISTICS = 2;
+    private static final int ADD_USER = 3;
+    private static final int REMOVE_USER = 4;
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
@@ -75,9 +82,9 @@ public class ExperimentManager extends AppCompatActivity {
                 }  else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).equals(getResources().getString(R.string.stat))){
                     startChosenActivity(SHOW_STATISTICS);
                 }else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.remove_user))){
-
+                    startChosenActivity(REMOVE_USER);
                 } else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.add_user))){
-
+                    startChosenActivity(ADD_USER);
                 }
                 return false;
             }
@@ -97,8 +104,15 @@ public class ExperimentManager extends AppCompatActivity {
             case SHOW_STATISTICS:
                 myIntent = new Intent(getBaseContext(), ShowStatisticsCommand.class);
                 break;
-            case 3:
+            case ADD_USER:
+                myIntent = new Intent(Intent.ACTION_INSERT_OR_EDIT);
+                myIntent.setType(ContactsContract.Contacts.CONTENT_ITEM_TYPE);
+                //startActivity(myIntent);
                 break;
+            case REMOVE_USER:
+                break;
+            default:
+
         }
         startActivity(myIntent);
     }

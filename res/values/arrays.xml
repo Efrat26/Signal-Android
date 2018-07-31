@@ -310,4 +310,10 @@
     <string-array name="statsArray">
         <item>@string/get_stat_for_user</item>
     </string-array>
+    <string-array name="addUserArray">
+        <item>@string/add_user</item>
+    </string-array>
+    <string-array name="removeUserArray">
+        <item>@string/remove_user</item>
+    </string-array>
 </resources>
