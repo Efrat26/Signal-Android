@@ -2,6 +2,8 @@ package org.thoughtcrime.securesms.biu.HiddenContact;
 
 import android.app.Application;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,12 +28,15 @@ public class ExperimentManager extends AppCompatActivity {
     private static final int SHOW_STATISTICS = 2;
     private static final int ADD_USER = 3;
     private static final int REMOVE_USER = 4;
+
+    private static final int RQS_PICK_CONTACT = 1;
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
     LinkedHashMap<String, List<String>> expandableListDetail;
     ExpandableListDataPump dataPump;
     Intent myIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,45 +80,104 @@ public class ExperimentManager extends AppCompatActivity {
                                 expandableListTitle.get(groupPosition)).get(
                                 childPosition), Toast.LENGTH_SHORT
                 ).show();
-                if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.simulate_attack))) {
+                if (expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.simulate_attack))) {
                     startChosenActivity(SIMULATE_ATTACK);
-                } else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.getLog))){
+                } else if (expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.getLog))) {
                     startChosenActivity(GET_LOG_FILE);
-                }  else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).equals(getResources().getString(R.string.stat))){
+                } else if (expandableListDetail.get(expandableListTitle.get(groupPosition)).equals(getResources().getString(R.string.stat))) {
                     startChosenActivity(SHOW_STATISTICS);
-                }else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.remove_user))){
+                } else if (expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.remove_user))) {
                     startChosenActivity(REMOVE_USER);
-                } else if(expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.add_user))){
+                } else if (expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.add_user))) {
                     startChosenActivity(ADD_USER);
                 }
                 return false;
             }
         });
     }
-    private void startChosenActivity(int option){
-        switch(option){
+
+    private void startChosenActivity(int option) {
+        switch (option) {
             //0 - simulate attack activity
             case SIMULATE_ATTACK:
                 myIntent = new Intent(getBaseContext(), SimulateAttackCommand.class);
+                startActivity(myIntent);
                 break;
             //1 - get log file
             case GET_LOG_FILE:
                 myIntent = new Intent(getBaseContext(), GetLogFileCommand.class);
+                startActivity(myIntent);
                 break;
             //2 - statistics
             case SHOW_STATISTICS:
                 myIntent = new Intent(getBaseContext(), ShowStatisticsCommand.class);
                 break;
             case ADD_USER:
-                myIntent = new Intent(Intent.ACTION_INSERT_OR_EDIT);
-                myIntent.setType(ContactsContract.Contacts.CONTENT_ITEM_TYPE);
-                //startActivity(myIntent);
+                myIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(myIntent, RQS_PICK_CONTACT);
                 break;
             case REMOVE_USER:
                 break;
             default:
 
         }
-        startActivity(myIntent);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RQS_PICK_CONTACT) {
+            if (resultCode == RESULT_OK) {
+                Uri contactData = data.getData();
+                String number = "";
+                Cursor cursor = getContentResolver().query(contactData, null, null, null, null);
+                cursor.moveToFirst();
+                String hasPhone = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                String contactId = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
+                if (hasPhone.equals("1")) {
+                    Cursor phones = getContentResolver().query
+                            (ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+                                            + " = " + contactId, null, null);
+                    while (phones.moveToNext()) {
+                        number = phones.getString(phones.getColumnIndex
+                                (ContactsContract.CommonDataKinds.Phone.NUMBER)).replaceAll("[-() ]", "");
+                    }
+                    phones.close();
+                    //Do something with number
+                } else {
+                    Toast.makeText(getApplicationContext(), "This contact has no phone number", Toast.LENGTH_LONG).show();
+                }
+                cursor.close();
+            }
+        }
     }
 }
+/*
+ // myIntent = new Intent(Intent.ACTION_GET_CONTENT);
+               // myIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+               // startActivityForResult(myIntent, RQS_PICK_CONTACT);
+                //myIntent = new Intent(Intent.ACTION_INSERT_OR_EDIT);
+                //myIntent.setType(ContactsContract.Contacts.CONTENT_ITEM_TYPE);
+                //startActivity(myIntent);
+                    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RQS_PICK_CONTACT) {
+            if (resultCode == RESULT_OK) {
+                Uri contactData = data.getData();
+                Cursor cursor = managedQuery(contactData, null, null, null, null);
+                cursor.moveToFirst();
+
+                String number = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                //contactName.setText(name);
+                //contactNumber.setText(number);
+                //contactEmail.setText(email);
+            }
+        }
+    }
+ */
