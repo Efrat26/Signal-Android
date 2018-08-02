@@ -31,7 +31,8 @@ public class ExperimentManager extends AppCompatActivity {
     private static final int ADD_USER = 3;
     private static final int REMOVE_USER = 4;
 
-    private static final int RQS_PICK_CONTACT = 1;
+    private static final int RQS_PICK_CONTACT_ADD= 1;
+    private static final int RQS_PICK_CONTACT_REMOVE= 2;
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
@@ -116,9 +117,11 @@ public class ExperimentManager extends AppCompatActivity {
                 break;
             case ADD_USER:
                 myIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(myIntent, RQS_PICK_CONTACT);
+                startActivityForResult(myIntent, RQS_PICK_CONTACT_ADD);
                 break;
             case REMOVE_USER:
+                myIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(myIntent, RQS_PICK_CONTACT_REMOVE);
                 break;
             default:
 
@@ -129,7 +132,7 @@ public class ExperimentManager extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RQS_PICK_CONTACT) {
+        if (requestCode == RQS_PICK_CONTACT_ADD || requestCode == RQS_PICK_CONTACT_REMOVE) {
             if (resultCode == RESULT_OK) {
                 Uri contactData = data.getData();
                 String number = "";
@@ -152,27 +155,49 @@ public class ExperimentManager extends AppCompatActivity {
                             getResources().getString(R.string.experimentKeySharedPref), "");
                     boolean needToAdd = true;
                     if(value != "") {
-                        String[] splittedString = value.split(",");
-                        for (int i = 0; i<splittedString.length; ++i){
-                            if(splittedString[i].equals(number)){
-                                needToAdd = false;
-                                break;
-                            }
-                        }
+                        needToAdd = !this.CheckIfValueIsInPreferences(value, ",", number);
                     }
-                    if(needToAdd){
-                        SharedPreferences.Editor editor = preferences.edit();
+                    SharedPreferences.Editor editor = preferences.edit();
+                    //if the number doesn't exist in the shared preferences and the request was to add
+                    //add it to the string in the shared preferences
+                    if(needToAdd && requestCode == RQS_PICK_CONTACT_ADD){
                         editor.putString(getResources().getString(R.string.experimentKeySharedPref),
                                 value+number+",");
                         editor.apply();
+                    //else if the number exist, the value isn't "" and the request was to remove
+                    //we shall remove it and write in the shared preferences the new string
+                    } else if(value != "" && !needToAdd && requestCode == RQS_PICK_CONTACT_REMOVE){
+                        String newstr = this.RemoveSubStringAndReturnNewString(value, number);
+                        editor.putString(getResources().getString(R.string.experimentKeySharedPref),
+                                newstr);
+                        editor.apply();
                     }
-                    //Do something with number
+
                 } else {
                     Toast.makeText(getApplicationContext(), "This contact has no phone number", Toast.LENGTH_LONG).show();
                 }
                 cursor.close();
             }
         }
+    }
+    private boolean CheckIfValueIsInPreferences (String str, String splitChar, String valueToFind){
+
+        String[] splittedString = str.split(splitChar);
+        for (int i = 0; i<splittedString.length; ++i){
+            if(splittedString[i].equals(valueToFind)){
+               return true;
+            }
+        }
+        return false;
+    }
+    private String RemoveSubStringAndReturnNewString(String old, String strToRemove){
+        //remove the number from string
+        String remove = strToRemove+",";
+        String result = old.replace(remove, "");
+        //in case there are 2 commas one after the other - replace it for one
+        result.replace(",,", ",");
+
+        return result;
     }
 }
 /*
