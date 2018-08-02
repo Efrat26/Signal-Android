@@ -1436,6 +1436,7 @@
     <string name="get_stat_for_user">Get Statistics from specific user</string>
     <string name="simulate_attack">Simulate Attack</string>
     <string name="getLog">Get Log</string>
+    <string name="experimentKeySharedPref">usability_experiment</string>
     <!-- EOF -->
 
 </resources>

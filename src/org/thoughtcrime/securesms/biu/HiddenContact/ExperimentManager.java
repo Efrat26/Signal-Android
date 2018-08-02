@@ -2,8 +2,10 @@ package org.thoughtcrime.securesms.biu.HiddenContact;
 
 import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -145,6 +147,25 @@ public class ExperimentManager extends AppCompatActivity {
                                 (ContactsContract.CommonDataKinds.Phone.NUMBER)).replaceAll("[-() ]", "");
                     }
                     phones.close();
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                    String value = preferences.getString(
+                            getResources().getString(R.string.experimentKeySharedPref), "");
+                    boolean needToAdd = true;
+                    if(value != "") {
+                        String[] splittedString = value.split(",");
+                        for (int i = 0; i<splittedString.length; ++i){
+                            if(splittedString[i].equals(number)){
+                                needToAdd = false;
+                                break;
+                            }
+                        }
+                    }
+                    if(needToAdd){
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(getResources().getString(R.string.experimentKeySharedPref),
+                                value+number+",");
+                        editor.apply();
+                    }
                     //Do something with number
                 } else {
                     Toast.makeText(getApplicationContext(), "This contact has no phone number", Toast.LENGTH_LONG).show();
