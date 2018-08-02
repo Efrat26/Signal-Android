@@ -1123,13 +1123,14 @@
   <!--others-->
   <string name="ok">אוקי</string>
   <!--mange experiment options menu-->
-  <string name="experiment_manager_phone">123456</string>
   <string name="experiment_name">ניסוי</string>
   <string name="manage_experiment">ניהול ניסוי</string>
   <string name="add_user">הוספת משתמש לניסוי</string>
   <string name="remove_user">הסרת משתמש מהניסוי</string>
+  <string name="remove_all_users">הסר את כל המששתתפים</string>
   <string name="send_command">שליחת פקודה</string>
   <string name="stat">הצג סטטיסטיקה</string>
+  <string name="get_stat_for_user">קבל סטטיסטיקה לגבי משתמש ספציפי</string>
   <string name="simulate_attack">סמלץ מתקפה</string>
   <string name="getLog">קבל לוג</string>
   <!--EOF-->
