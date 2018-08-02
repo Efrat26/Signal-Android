@@ -30,9 +30,10 @@ public class ExperimentManager extends AppCompatActivity {
     private static final int SHOW_STATISTICS = 2;
     private static final int ADD_USER = 3;
     private static final int REMOVE_USER = 4;
-
+    private static final int REMOVE_ALL_USERS = 5;
     private static final int RQS_PICK_CONTACT_ADD= 1;
     private static final int RQS_PICK_CONTACT_REMOVE= 2;
+    private static final int RQS_PICK_CONTACT_REMOVE_ALL= 3;
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
@@ -93,6 +94,8 @@ public class ExperimentManager extends AppCompatActivity {
                     startChosenActivity(REMOVE_USER);
                 } else if (expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.add_user))) {
                     startChosenActivity(ADD_USER);
+                } else if (expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition).equals(getResources().getString(R.string.remove_all_users))){
+                    startChosenActivity(REMOVE_ALL_USERS);
                 }
                 return false;
             }
@@ -122,6 +125,9 @@ public class ExperimentManager extends AppCompatActivity {
             case REMOVE_USER:
                 myIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(myIntent, RQS_PICK_CONTACT_REMOVE);
+                break;
+            case REMOVE_ALL_USERS:
+                this.RemoveAllUsersFromExperiment();
                 break;
             default:
 
@@ -198,6 +204,12 @@ public class ExperimentManager extends AppCompatActivity {
         result.replace(",,", ",");
 
         return result;
+    }
+    private void RemoveAllUsersFromExperiment(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(getResources().getString(R.string.experimentKeySharedPref),"");
+        editor.apply();
     }
 }
 /*

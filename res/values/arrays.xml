@@ -315,5 +315,6 @@
     </string-array>
     <string-array name="removeUserArray">
         <item>@string/remove_user</item>
+        <item>@string/remove_all_users</item>
     </string-array>
 </resources>
