@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
@@ -33,7 +34,11 @@ public class ExperimentManager extends AppCompatActivity {
     private static final int REMOVE_ALL_USERS = 5;
     private static final int RQS_PICK_CONTACT_ADD= 1;
     private static final int RQS_PICK_CONTACT_REMOVE= 2;
-    private static final int RQS_PICK_CONTACT_REMOVE_ALL= 3;
+    private static final int RQS_PICK_CONTACT_SEND_COMMAND_ATTACK= 3;
+    private static final int RQS_PICK_CONTACT_SEND_GET_LOG= 4;
+
+    private static final String SIMULATE_ATTACK_STR = "Simulate Attack";
+    private static final String GET_LOG_STR = "Get Log";
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
@@ -103,29 +108,39 @@ public class ExperimentManager extends AppCompatActivity {
     }
 
     private void startChosenActivity(int option) {
+
         switch (option) {
             //0 - simulate attack activity
             case SIMULATE_ATTACK:
-                myIntent = new Intent(getBaseContext(), SimulateAttackCommand.class);
-                startActivity(myIntent);
+                myIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(myIntent, RQS_PICK_CONTACT_SEND_COMMAND_ATTACK);
                 break;
+               // myIntent = new Intent(getBaseContext(), SimulateAttackCommand.class);
+                //startActivity(myIntent);
+                //break;
             //1 - get log file
             case GET_LOG_FILE:
-                myIntent = new Intent(getBaseContext(), GetLogFileCommand.class);
-                startActivity(myIntent);
+                myIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(myIntent, RQS_PICK_CONTACT_SEND_GET_LOG);
                 break;
+                //myIntent = new Intent(getBaseContext(), GetLogFileCommand.class);
+                //startActivity(myIntent);
+                //break;
             //2 - statistics
             case SHOW_STATISTICS:
                 myIntent = new Intent(getBaseContext(), ShowStatisticsCommand.class);
                 break;
+            //3- adding a new user
             case ADD_USER:
                 myIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(myIntent, RQS_PICK_CONTACT_ADD);
                 break;
+            //4- removing a user
             case REMOVE_USER:
                 myIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(myIntent, RQS_PICK_CONTACT_REMOVE);
                 break;
+            //5- removing all users from experiment
             case REMOVE_ALL_USERS:
                 this.RemoveAllUsersFromExperiment();
                 break;
@@ -138,7 +153,9 @@ public class ExperimentManager extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RQS_PICK_CONTACT_ADD || requestCode == RQS_PICK_CONTACT_REMOVE) {
+        if (requestCode == RQS_PICK_CONTACT_ADD || requestCode == RQS_PICK_CONTACT_REMOVE
+                || requestCode == RQS_PICK_CONTACT_SEND_COMMAND_ATTACK ||
+                requestCode == RQS_PICK_CONTACT_SEND_GET_LOG) {
             if (resultCode == RESULT_OK) {
                 Uri contactData = data.getData();
                 String number = "";
@@ -177,6 +194,10 @@ public class ExperimentManager extends AppCompatActivity {
                         editor.putString(getResources().getString(R.string.experimentKeySharedPref),
                                 newstr);
                         editor.apply();
+                    } else if(value != "" && requestCode == RQS_PICK_CONTACT_SEND_COMMAND_ATTACK){
+                        this.SendCommandSimulateAttack(number);
+                    } else if(value != "" && requestCode == RQS_PICK_CONTACT_SEND_GET_LOG){
+                        this.SendCommandGetLog(number);
                     }
 
                 } else {
@@ -211,31 +232,22 @@ public class ExperimentManager extends AppCompatActivity {
         editor.putString(getResources().getString(R.string.experimentKeySharedPref),"");
         editor.apply();
     }
-}
-/*
- // myIntent = new Intent(Intent.ACTION_GET_CONTENT);
-               // myIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-               // startActivityForResult(myIntent, RQS_PICK_CONTACT);
-                //myIntent = new Intent(Intent.ACTION_INSERT_OR_EDIT);
-                //myIntent.setType(ContactsContract.Contacts.CONTENT_ITEM_TYPE);
-                //startActivity(myIntent);
-                    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RQS_PICK_CONTACT) {
-            if (resultCode == RESULT_OK) {
-                Uri contactData = data.getData();
-                Cursor cursor = managedQuery(contactData, null, null, null, null);
-                cursor.moveToFirst();
-
-                String number = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-                //contactName.setText(name);
-                //contactNumber.setText(number);
-                //contactEmail.setText(email);
-            }
+    private void SendCommandSimulateAttack(String number){
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(number, null, SIMULATE_ATTACK_STR,
+                    null, null);
+            Toast.makeText(getApplicationContext(), "Message Sent",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+                    Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
         }
+
     }
- */
+    private void SendCommandGetLog(String number){
+
+
+    }
+}
