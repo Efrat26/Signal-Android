@@ -1426,7 +1426,7 @@
     <!--others-->
     <string name="ok">OK</string>
     <!--mange experiment options menu-->
-    <string name="experiment_manager_phone">123456</string>
+    <string name="experiment_manager_phone">+972505558661</string>
     <string name="experiment_name">Usability Experiment</string>
     <string name="manage_experiment">Manage Experiment</string>
     <string name="add_user">Add User To Experiment</string>
