@@ -37,7 +37,7 @@ public class LogSender {
                 FileReader LogReader = new FileReader(LogFile);
                 in = new BufferedReader(LogReader);
                 String line;
-                while((line = in.readLine())!= null){
+                while ((line = in.readLine()) != null) {
                     SendLineToExpManager(line);
                 }
             } catch (Exception e) {
@@ -47,7 +47,7 @@ public class LogSender {
         }
     }
 
-    private void SendLineToExpManager(String line){
+    private void SendLineToExpManager(String line) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(getApplicationContext().getResources().getString(R.string.experiment_manager_phone),
@@ -55,7 +55,7 @@ public class LogSender {
             Toast.makeText(getApplicationContext(), "Message Sent",
                     Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
-            Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+            Toast.makeText(getApplicationContext(), ex.getMessage().toString(),
                     Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }

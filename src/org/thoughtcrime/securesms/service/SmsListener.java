@@ -19,6 +19,9 @@ package org.thoughtcrime.securesms.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -37,6 +40,8 @@ import org.thoughtcrime.securesms.util.Util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.webrtc.ContextUtils.getApplicationContext;
 
 public class SmsListener extends BroadcastReceiver {
 
@@ -176,4 +181,5 @@ public class SmsListener extends BroadcastReceiver {
       abortBroadcast();
     }
   }
+
 }
