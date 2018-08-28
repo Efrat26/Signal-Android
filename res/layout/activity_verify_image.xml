@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/signal_primary"
     android:padding="10dp"
-    tools:context="org.thoughtcrime.securesms.webrtc.IsUserLegitimate">
+    tools:context="org.thoughtcrime.securesms.VerifyImage">
 
 
     <TextView
